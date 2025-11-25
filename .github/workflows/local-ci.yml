@@ -16,16 +16,15 @@ jobs:
       run: docker compose up -d --build
 
     - name: Wait for MySQL to be ready
-      shell: pwsh
-      run: |
-        Write-Host "Waiting for MySQL..."
-        $max = 30
-        for ($i = 0; $i -lt $max; $i++) {
-          $status = docker compose exec -T mysql mysqladmin ping -h localhost --silent
-          if ($status) { break }
-          Start-Sleep -Seconds 2
-        }
-
+  shell: powershell
+  run: |
+    Write-Host "Waiting for MySQL..."
+    $max = 30
+    for ($i = 0; $i -lt $max; $i++) {
+      $status = docker compose exec -T mysql mysqladmin ping -h localhost --silent
+      if ($status) { break }
+      Start-Sleep -Seconds 2
+    }
     - name: Install dependencies only if vendor missing
       run: |
         docker compose exec -T app sh -c "if [ ! -d vendor ]; then echo 'Vendor missing — running composer install'; composer install --no-interaction --prefer-dist; else echo 'Vendor exists — composer install skipped'; fi"
