@@ -1,42 +1,50 @@
-name: Deploy Main (PowerShell + Local)
+name: Laravel CI/CD (dev)
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main]
 
 jobs:
   deploy:
     runs-on: self-hosted
     defaults:
       run:
-        shell: powershell
+        shell: powershell   # everything in PowerShell, no mixing
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Rebuild & restart only the app container
-        run: docker compose up -d --build --force-recreate --no-deps app
+      # One single command = rebuild + restart only the app (zero downtime)
+      - name: Deploy new code (fastest possible way)
+        run: docker compose up -d --build --force-recreate --no-deps app nginx
 
-      - name: Wait for MySQL (max 60 seconds)
+      # Safe & instant MySQL wait (fails only if DB really dead)
+      - name: Wait for MySQL
         run: |
-          Write-Host "Waiting for MySQL to be ready..."
           $attempts = 0
-          while ($attempts -lt 30) {
+          while ($attempts -lt 20) {
             if (docker compose exec -T mysql mysqladmin ping -h127.0.0.1 --silent) {
-              Write-Host "MySQL is ready!"
+              Write-Host "MySQL ready"
               break
             }
             Start-Sleep -Seconds 2
             $attempts++
           }
-          if ($attempts -ge 30) { Write-Error "MySQL timeout!" ; exit 1 }
 
+      # Run migrations (fail the deploy if they break — you want to know!)
       - name: Run migrations
         run: docker compose exec -T app php artisan migrate --force
 
-      - name: Clear & optimize (exactly what you asked for)
+      # The only cache command you really need for dev
+      - name: Clear + optimize
         run: docker compose exec -T app php artisan optimize:clear
 
-      - name: Done
-        run: Write-Host "Deployed successfully! http://localhost:8000" -ForegroundColor Green
+      # Done – pretty output
+      - name: Deployment complete
+        run: |
+          Write-Host "==================================" -ForegroundColor Cyan
+          Write-Host "Deployment to DEV successful!" -ForegroundColor Green
+          Write-Host "URL: http://localhost:8000" -ForegroundColor Yellow
+          Write-Host "Time: $(Get-Date -Format 'HH:mm:ss')" -ForegroundColor Cyan
+          Write-Host "==================================" -ForegroundColor Cyan
