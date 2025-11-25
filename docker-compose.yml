@@ -4,7 +4,6 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: laravel_app
-    working_dir: /var/www/html
     volumes:
       - ./:/var/www/html
     networks:
@@ -13,7 +12,7 @@ services:
       - mysql
 
   nginx:
-    image: nginx:latest
+    image: nginx:alpine
     container_name: laravel_nginx
     ports:
       - "8000:80"
@@ -28,7 +27,6 @@ services:
   mysql:
     image: mysql:8.0
     container_name: laravel_mysql
-    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: laravel
@@ -40,10 +38,6 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - laravel
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -61,8 +55,6 @@ services:
 
 volumes:
   mysql_data:
-    driver: local
 
 networks:
   laravel:
-    driver: bridge

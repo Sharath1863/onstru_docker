@@ -12,6 +12,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Start containers
+      run: docker compose up -d --build
+
+    - name: Wait for MySQL
+      run: Start-Sleep -Seconds 15
+      shell: powershell
+
     - name: Check if vendor exists
       id: check_vendor
       run: |
@@ -22,31 +29,15 @@ jobs:
         }
       shell: powershell
 
-    - name: Start containers (if not running)
-      run: docker compose up -d
-      continue-on-error: true
-
     - name: Install dependencies (first time only)
       if: steps.check_vendor.outputs.exists == 'false'
-      run: |
-        Start-Sleep -Seconds 15
-        docker compose exec -T app composer install --no-interaction --no-scripts --prefer-dist
-        docker compose exec -T app composer dump-autoload
-      shell: powershell
-      timeout-minutes: 15
-
-    - name: Restart app
-      run: docker compose restart app nginx
-
-    - name: Wait
-      run: Start-Sleep -Seconds 5
-      shell: powershell
+      run: docker compose exec -T app composer install --no-interaction
 
     - name: Run migrations
       run: docker compose exec -T app php artisan migrate --force
 
-    - name: Clear cache
-      run: docker compose exec -T app php artisan cache:clear
+    - name: Optimize
+      run: docker compose exec -T app php artisan optimize:clear
 
     - name: Done
       run: Write-Host "✅ Deployed! http://localhost:8000"
