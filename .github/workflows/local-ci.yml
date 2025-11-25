@@ -29,12 +29,14 @@ jobs:
     - name: Check if vendor exists
       id: check_vendor
       run: |
-        if (Test-Path "vendor") {
+        $vendorCheck = docker compose exec -T app test -d vendor
+        if ($LASTEXITCODE -eq 0) {
           echo "exists=true" >> $env:GITHUB_OUTPUT
         } else {
           echo "exists=false" >> $env:GITHUB_OUTPUT
         }
       shell: powershell
+      continue-on-error: true
 
     - name: Install dependencies (first time only)
       if: steps.check_vendor.outputs.exists == 'false'
@@ -47,5 +49,5 @@ jobs:
       run: docker compose exec -T app php artisan optimize:clear
 
     - name: Done
-      run: Write-Host "✅ Deployed! http://localhost:8000"
+      run: Write-Host "Deployed! http://localhost:8000"
       shell: powershell
