@@ -1,4 +1,4 @@
-name: Laravel CI/CD (Local)
+name: CI/CD for MAIN
 
 on:
   push:
@@ -16,31 +16,32 @@ jobs:
       run: docker compose up -d --build
 
     - name: Wait for MySQL to be ready
-  shell: powershell
-  run: |
-    Write-Host "Waiting for MySQL..."
-    $max = 30
-    for ($i = 0; $i -lt $max; $i++) {
-      $status = docker compose exec -T mysql mysqladmin ping -h localhost --silent
-      if ($status) { break }
-      Start-Sleep -Seconds 2
-    }
+      shell: powershell
+      run: |
+        Write-Host "Waiting for MySQL..."
+        $max = 30
+        for ($i = 0; $i -lt $max; $i++) {
+          $status = docker compose exec -T mysql mysqladmin ping -h localhost --silent
+          if ($status) { Write-Host "MySQL is ready."; break }
+          Start-Sleep -Seconds 2
+        }
+
     - name: Install dependencies only if vendor missing
       run: |
-        docker compose exec -T app sh -c "if [ ! -d vendor ]; then echo 'Vendor missing — running composer install'; composer install --no-interaction --prefer-dist; else echo 'Vendor exists — composer install skipped'; fi"
+        docker compose exec -T app sh -c "if [ ! -d vendor ]; then echo 'Vendor missing — running composer install'; composer install --no-interaction --prefer-dist; else echo 'Vendor exists — skipped'; fi"
 
-    - name: Run migrations (safe)
+    - name: Run DB migrations
       run: docker compose exec -T app php artisan migrate --force || exit 0
 
     - name: Generate key (safe)
       run: docker compose exec -T app php artisan key:generate || exit 0
 
-    - name: Clear / optimize cache
+    - name: Clear cache and optimize
       run: docker compose exec -T app php artisan optimize:clear
 
-    - name: Restart app container
+    - name: Restart app container (deploy)
       run: docker compose restart app
 
-    - name: Completed
-      shell: pwsh
-      run: Write-Host "🚀 Deployment completed — http://localhost:8000"
+    - name: Deployment completed
+      shell: powershell
+      run: Write-Host "🚀 Deployed successfully — http://localhost:8000"
