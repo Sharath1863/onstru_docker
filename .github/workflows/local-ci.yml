@@ -1,4 +1,4 @@
-name: Laravel CI/CD - Main Branch
+name: Laravel CI/CD - Simple
 
 on:
   push:
@@ -7,45 +7,25 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
+    defaults:
+      run:
+        working-directory: C:\Users\chand\Downloads\Onstru_version_web
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Ensure containers are running
-        run: |
-          $running = docker ps --filter "name=laravel_app" --format "{{.Names}}"
-          if ($running -eq "laravel_app") {
-            Write-Host "Containers running, restarting..."
-            docker compose restart app nginx
-          } else {
-            Write-Host "Containers not running, starting..."
-            docker compose up -d
-          }
+      - name: Pull latest code
+        run: git pull origin main
         shell: powershell
 
-      - name: Wait for containers
-        run: Start-Sleep -Seconds 10
+      - name: Restart containers
+        run: docker compose restart app nginx
         shell: powershell
-
-      - name: Check and install dependencies
-        run: |
-          $vendorExists = docker compose exec -T app test -d vendor
-          if ($LASTEXITCODE -ne 0) {
-            Write-Host "Installing composer dependencies..."
-            docker compose exec -T app composer install --no-interaction --prefer-dist
-          } else {
-            Write-Host "Vendor folder exists, skipping composer install"
-          }
-        shell: powershell
-        timeout-minutes: 10
 
       - name: Run migrations
         run: docker compose exec -T app php artisan migrate --force
         shell: powershell
 
       - name: Clear cache
-        run: docker compose exec -T app php artisan optimize:clear
+        run: docker compose exec -T app php artisan cache:clear
         shell: powershell
 
       - name: Done
