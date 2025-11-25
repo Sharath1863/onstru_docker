@@ -6,13 +6,11 @@ services:
     container_name: laravel_app
     working_dir: /var/www/html
     volumes:
-      - .:/var/www/html
+      - ./:/var/www/html
     networks:
       - laravel
     depends_on:
-      mysql:
-        condition: service_healthy   # ← NEW: wait for MySQL to be really ready
-    restart: unless-stopped        # ← NEW: auto-restart if it ever dies
+      - mysql
 
   nginx:
     image: nginx:latest
@@ -20,13 +18,12 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - .:/var/www/html
+      - ./:/var/www/html
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - app
     networks:
       - laravel
-    restart: unless-stopped
 
   mysql:
     image: mysql:8.0
@@ -64,6 +61,7 @@ services:
 
 volumes:
   mysql_data:
+    driver: local
 
 networks:
   laravel:

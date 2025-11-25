@@ -1,34 +1,58 @@
-name: Deploy — Fast & No Composer
+name: Laravel CI/CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   deploy:
     runs-on: self-hosted
-    defaults:
-      run:
-        shell: powershell
 
     steps:
-      - name: Checkout latest code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      # Start containers without rebuild
-      - name: Start containers (no rebuild)
-        run: docker compose up -d --no-build
+    - name: Check if vendor exists
+      id: check_vendor
+      run: |
+        if (Test-Path "vendor") {
+          echo "exists=true" >> $env:GITHUB_OUTPUT
+        } else {
+          echo "exists=false" >> $env:GITHUB_OUTPUT
+        }
+      shell: powershell
 
-      # Sync code from host into container (Linux cp command inside app container)
-      - name: Sync application code into container
-        run: |
-          docker compose exec -T app sh -c "cp -r /var/www/html/. /var/www/html"
+    - name: Start containers
+      run: docker compose up -d
 
-      # Apply migrations & cache clear
-      - name: Migrate & clear
-        run: |
-          docker compose exec -T app php artisan migrate --force
-          docker compose exec -T app php artisan optimize:clear
+    - name: Install dependencies (first time only)
+      if: steps.check_vendor.outputs.exists == 'false'
+      run: |
+        Write-Host "Installing composer dependencies..."
+        Start-Sleep -Seconds 15
+        docker compose exec -T app composer install --no-interaction --prefer-dist
+      shell: powershell
+      timeout-minutes: 15
 
-      - name: Deployment done
-        run: Write-Host "🚀 Deployment completed — http://localhost:8000" -ForegroundColor Green
+    - name: Restart containers to pick up new code
+      run: docker compose restart app nginx
+
+    - name: Wait for app to restart
+      run: Start-Sleep -Seconds 5
+      shell: powershell
+
+    - name: Run migrations
+      run: docker compose exec -T app php artisan migrate --force
+
+    - name: Clear cache
+      run: docker compose exec -T app php artisan cache:clear
+
+    - name: Show deployment info
+      run: |
+        Write-Host "================================"
+        Write-Host " Deployment Successful!"
+        Write-Host "================================"
+        Write-Host " Working directory: $PWD"
+        Write-Host " Application URL: http://localhost:8000"
+        Write-Host "================================"
+      shell: powershell
