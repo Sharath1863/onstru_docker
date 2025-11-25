@@ -3,6 +3,10 @@
 @section('title', 'Onstru | Home')
 
 @section('content')
+<div class="container">
+    <h1>Welcome Home!</h1>
+    <p>This is updated via CI/CD!</p>
+</div>
 
     <link rel="stylesheet" href="{{ asset('assets/css/home.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/cards.css') }}">
