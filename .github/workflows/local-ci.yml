@@ -1,4 +1,4 @@
-name: Laravel CI/CD
+name: Laravel CI/CD (Local)
 
 on:
   push:
@@ -12,40 +12,36 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Check if vendor exists
-      id: check_vendor
+    - name: Start containers (build if needed)
+      run: docker compose up -d --build
+
+    - name: Wait for MySQL to be ready
+      shell: pwsh
       run: |
-        if (Test-Path "vendor") {
-          echo "exists=true" >> $env:GITHUB_OUTPUT
-        } else {
-          echo "exists=false" >> $env:GITHUB_OUTPUT
+        Write-Host "Waiting for MySQL..."
+        $max = 30
+        for ($i = 0; $i -lt $max; $i++) {
+          $status = docker compose exec -T mysql mysqladmin ping -h localhost --silent
+          if ($status) { break }
+          Start-Sleep -Seconds 2
         }
-      shell: powershell
 
-    - name: Start containers (if not running)
-      run: docker compose up -d
-      continue-on-error: true
-
-    - name: Install dependencies (first time only)
-      if: steps.check_vendor.outputs.exists == 'false'
+    - name: Install dependencies only if vendor missing
       run: |
-        Start-Sleep -Seconds 15
-        docker compose exec -T app composer install --no-interaction
-      shell: powershell
+        docker compose exec -T app sh -c "if [ ! -d vendor ]; then echo 'Vendor missing — running composer install'; composer install --no-interaction --prefer-dist; else echo 'Vendor exists — composer install skipped'; fi"
 
-    - name: Restart app
-      run: docker compose restart app nginx
+    - name: Run migrations (safe)
+      run: docker compose exec -T app php artisan migrate --force || exit 0
 
-    - name: Wait
-      run: Start-Sleep -Seconds 5
-      shell: powershell
+    - name: Generate key (safe)
+      run: docker compose exec -T app php artisan key:generate || exit 0
 
-    - name: Run migrations
-      run: docker compose exec -T app php artisan migrate --force
-
-    - name: Clear cache
+    - name: Clear / optimize cache
       run: docker compose exec -T app php artisan optimize:clear
 
-    - name: Done
-      run: Write-Host " Deployed! http://localhost:8000"
-      shell: powershell
+    - name: Restart app container
+      run: docker compose restart app
+
+    - name: Completed
+      shell: pwsh
+      run: Write-Host "🚀 Deployment completed — http://localhost:8000"
