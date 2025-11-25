@@ -1,50 +1,62 @@
-name: Laravel CI/CD (dev)
+name: Laravel CI/CD
 
 on:
   push:
-    branches: [ main]
+    branches: ["main"]
 
 jobs:
   deploy:
     runs-on: self-hosted
-    defaults:
-      run:
-        shell: powershell   # everything in PowerShell, no mixing
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      # One single command = rebuild + restart only the app (zero downtime)
-      - name: Deploy new code (fastest possible way)
-        run: docker compose up -d --build --force-recreate --no-deps app nginx
+    - name: Check if vendor exists
+      id: check_vendor
+      run: |
+        if (Test-Path "vendor") {
+          echo "exists=true" >> $env:GITHUB_OUTPUT
+        } else {
+          echo "exists=false" >> $env:GITHUB_OUTPUT
+        }
+      shell: powershell
 
-      # Safe & instant MySQL wait (fails only if DB really dead)
-      - name: Wait for MySQL
-        run: |
-          $attempts = 0
-          while ($attempts -lt 20) {
-            if (docker compose exec -T mysql mysqladmin ping -h127.0.0.1 --silent) {
-              Write-Host "MySQL ready"
-              break
-            }
-            Start-Sleep -Seconds 2
-            $attempts++
-          }
+    - name: Start containers
+      run: docker compose up -d
 
-      # Run migrations (fail the deploy if they break — you want to know!)
-      - name: Run migrations
-        run: docker compose exec -T app php artisan migrate --force
+    - name: Install dependencies (first time only)
+      if: steps.check_vendor.outputs.exists == 'false'
+      run: |
+        Write-Host "Installing composer dependencies..."
+        Start-Sleep -Seconds 15
+        docker compose exec -T app composer install --no-interaction --prefer-dist
+      shell: powershell
+      timeout-minutes: 15
 
-      # The only cache command you really need for dev
-      - name: Clear + optimize
-        run: docker compose exec -T app php artisan optimize:clear
+    - name: Update dependencies (if composer.json changed)
+      run: docker compose exec -T app composer install --no-interaction --prefer-dist
+      continue-on-error: true
 
-      # Done – pretty output
-      - name: Deployment complete
-        run: |
-          Write-Host "==================================" -ForegroundColor Cyan
-          Write-Host "Deployment to DEV successful!" -ForegroundColor Green
-          Write-Host "URL: http://localhost:8000" -ForegroundColor Yellow
-          Write-Host "Time: $(Get-Date -Format 'HH:mm:ss')" -ForegroundColor Cyan
-          Write-Host "==================================" -ForegroundColor Cyan
+    - name: Restart containers to pick up new code
+      run: docker compose restart app nginx
+
+    - name: Wait for app to restart
+      run: Start-Sleep -Seconds 5
+      shell: powershell
+
+    - name: Run migrations
+      run: docker compose exec -T app php artisan migrate --force
+
+    - name: Clear cache
+      run: docker compose exec -T app php artisan cache:clear
+
+    - name: Show deployment info
+      run: |
+        Write-Host "================================"
+        Write-Host "Deployment Successful!"
+        Write-Host "================================"
+        Write-Host " Working directory: $PWD"
+        Write-Host " Application URL: http://localhost:8000"
+        Write-Host "================================"
+      shell: powershell
