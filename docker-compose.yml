@@ -1,70 +1,58 @@
-version: '3.8'
+name: Laravel CI/CD
 
-services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: laravel_app
-    working_dir: /var/www/html
-    volumes:
-      - ./:/var/www/html
-    networks:
-      - laravel
-    depends_on:
-      - mysql
+on:
+  push:
+    branches: ["main"]
 
-  nginx:
-    image: nginx:latest
-    container_name: laravel_nginx
-    ports:
-      - "8000:80"
-    volumes:
-      - ./:/var/www/html
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-      - app
-    networks:
-      - laravel
+jobs:
+  deploy:
+    runs-on: self-hosted
 
-  mysql:
-    image: mysql:8.0
-    container_name: laravel_mysql
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: laravel
-      MYSQL_USER: laravel
-      MYSQL_PASSWORD: secret
-    ports:
-      - "3308:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - laravel
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: laravel_phpmyadmin
-    ports:
-      - "8081:80"
-    environment:
-      PMA_HOST: mysql
-      PMA_USER: root
-      PMA_PASSWORD: root
-    depends_on:
-      - mysql
-    networks:
-      - laravel
+    - name: Check if vendor exists
+      id: check_vendor
+      run: |
+        if (Test-Path "vendor") {
+          echo "exists=true" >> $env:GITHUB_OUTPUT
+        } else {
+          echo "exists=false" >> $env:GITHUB_OUTPUT
+        }
+      shell: powershell
 
-volumes:
-  mysql_data:
-    driver: local
+    - name: Start containers
+      run: docker compose up -d
 
-networks:
-  laravel:
-    driver: bridge
+    - name: Install dependencies (first time only)
+      if: steps.check_vendor.outputs.exists == 'false'
+      run: |
+        Write-Host "Installing composer dependencies..."
+        Start-Sleep -Seconds 15
+        docker compose exec -T app composer install --no-interaction --prefer-dist
+      shell: powershell
+      timeout-minutes: 15
+
+    - name: Restart containers to pick up new code
+      run: docker compose restart app nginx
+
+    - name: Wait for app to restart
+      run: Start-Sleep -Seconds 5
+      shell: powershell
+
+    - name: Run migrations
+      run: docker compose exec -T app php artisan migrate --force
+
+    - name: Clear cache
+      run: docker compose exec -T app php artisan cache:clear
+
+    - name: Show deployment info
+      run: |
+        Write-Host "================================"
+        Write-Host " Deployment Successful!"
+        Write-Host "================================"
+        Write-Host " Working directory: $PWD"
+        Write-Host " Application URL: http://localhost:8000"
+        Write-Host "================================"
+      shell: powershell
