@@ -1,4 +1,4 @@
-name: Deploy main → Production
+name: Laravel CI/CD - Main Branch
 
 on:
   push:
@@ -7,28 +7,31 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
-    defaults:
-      run:
-        shell: powershell
 
     steps:
-      - name: Checkout latest code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Start containers safely
-        run: |
-          docker compose start
-          if ($LASTEXITCODE -ne 0) {
-            docker compose up -d --no-build
-          }
+      - name: Start containers
+        run: docker compose up -d --no-build
+        shell: powershell
 
-      - name: Restart application containers
+      - name: Wait for MySQL
+        run: Start-Sleep -Seconds 10
+        shell: powershell
+
+      - name: Restart app
         run: docker compose restart app nginx
+        shell: powershell
 
-      - name: Migrate & clear cache
-        run: |
-          docker compose exec -T app php artisan migrate --force
-          docker compose exec -T app php artisan optimize:clear
+      - name: Run migrations
+        run: docker compose exec -T app php artisan migrate --force
+        shell: powershell
 
-      - name: Deployment Successful
-        run: Write-Host "🚀 Deployment completed — http://localhost:8000" -ForegroundColor Green
+      - name: Clear cache
+        run: docker compose exec -T app php artisan optimize:clear
+        shell: powershell
+
+      - name: Done
+        run: Write-Host "✅ Deployed! http://localhost:8000" -ForegroundColor Green
+        shell: powershell
