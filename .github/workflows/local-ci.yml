@@ -1,4 +1,4 @@
-name: Local CI/CD for Laravel Docker
+name: Deploy main → Production
 
 on:
   push:
@@ -7,43 +7,28 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
+    defaults:
+      run:
+        shell: powershell
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout latest code
+        uses: actions/checkout@v4
 
-    - name: Stop existing containers
-      run: docker compose down || true
+      # Start containers (no recreate/no rebuild) - prevents container name conflicts
+      - name: Start containers safely
+        run: |
+          docker compose start || docker compose up -d --no-build
 
-    - name: Build and start containers
-      run: docker compose up -d --build
+      # Restart only app container to load latest code instantly
+      - name: Restart application services
+        run: docker compose restart app nginx
 
-    - name: Wait for MySQL
-      run: |
-        echo "Waiting for MySQL..."
-        sleep 15
+      # Apply migrations & refresh cache
+      - name: Migrate & clear cache
+        run: |
+          docker compose exec -T app php artisan migrate --force
+          docker compose exec -T app php artisan optimize:clear
 
-    - name: Install dependencies
-      run: docker compose exec -T app composer install --no-interaction
-
-    - name: Setup .env file
-      run: |
-        docker compose exec -T app cp .env.example .env || true
-
-    - name: Generate key
-      run: docker compose exec -T app php artisan key:generate --force
-
-    - name: Run migrations
-      run: docker compose exec -T app php artisan migrate --force
-
-    - name: Clear cache
-      run: docker compose exec -T app php artisan optimize:clear
-
-    - name: Run tests
-      run: docker compose exec -T app php artisan test || true
-
-    - name: Show status
-      run: docker compose ps
-
-    - name: Done
-      run: echo " Deployment complete! App running at http://localhost:8000"
+      - name: Deployment Successful
+        run: Write-Host "🚀 Deployment completed — http://localhost:8000" -ForegroundColor Green
