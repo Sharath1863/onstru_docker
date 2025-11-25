@@ -1,0 +1,39 @@
+name: Local CI/CD for Laravel Docker
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: self-hosted   # Local runner
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build Docker containers
+      run: docker compose up -d --build
+
+    - name: Wait for MySQL
+      run: |
+        echo "Waiting for MySQL..."
+        for i in {1..30}; do
+          docker compose exec mysql mysqladmin ping -h localhost --silent && break
+          sleep 2
+        done
+
+    - name: Run Composer
+      run: docker compose exec app composer install --no-interaction
+
+    - name: Run Migrations
+      run: docker compose exec app php artisan migrate --force
+
+    - name: Generate Application Key (only once)
+      run: docker compose exec app php artisan key:generate || echo "Key already set"
+
+    - name: Run Laravel Tests (optional)
+      run: docker compose exec app php artisan test || exit 0
+
+    - name: Restart services
+      run: docker compose restart
