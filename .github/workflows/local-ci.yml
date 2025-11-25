@@ -21,27 +21,27 @@ jobs:
         Write-Host "Waiting for MySQL..."
         $max = 30
         for ($i = 0; $i -lt $max; $i++) {
-          $status = docker compose exec -T mysql mysqladmin ping -h localhost --silent
-          if ($status) { Write-Host "MySQL is ready."; break }
+          $ok = docker compose exec -T mysql mysqladmin ping -h localhost --silent
+          if ($ok) { Write-Host "MySQL is ready"; break }
           Start-Sleep -Seconds 2
         }
 
     - name: Install dependencies only if vendor missing
       run: |
-        docker compose exec -T app sh -c "if [ ! -d vendor ]; then echo 'Vendor missing — running composer install'; composer install --no-interaction --prefer-dist; else echo 'Vendor exists — skipped'; fi"
+        docker compose exec -T app sh -c 'if [ ! -d vendor ]; then echo "Vendor missing - running composer install"; composer install --no-interaction --prefer-dist; else echo "Vendor exists - skipped"; fi'
 
     - name: Run DB migrations
       run: docker compose exec -T app php artisan migrate --force || exit 0
 
-    - name: Generate key (safe)
+    - name: Generate APP_KEY (safe)
       run: docker compose exec -T app php artisan key:generate || exit 0
 
-    - name: Clear cache and optimize
+    - name: Clear & optimize
       run: docker compose exec -T app php artisan optimize:clear
 
-    - name: Restart app container (deploy)
+    - name: Restart application container
       run: docker compose restart app
 
     - name: Deployment completed
       shell: powershell
-      run: Write-Host "🚀 Deployed successfully — http://localhost:8000"
+      run: Write-Host "🚀 Deployment complete — http://localhost:8000"
