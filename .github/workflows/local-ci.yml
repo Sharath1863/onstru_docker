@@ -12,8 +12,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Stop old containers
+      run: docker compose down
+      continue-on-error: true
+
     - name: Start containers
-      run: docker compose up -d --build
+      run: docker compose up -d
 
     - name: Wait for MySQL
       run: Start-Sleep -Seconds 15
