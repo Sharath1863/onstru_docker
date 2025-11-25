@@ -15,16 +15,20 @@ jobs:
       - name: Checkout latest code
         uses: actions/checkout@v4
 
-      # Start containers (no recreate/no rebuild) - prevents container name conflicts
+      # Start containers safely — WITHOUT conflicts and WITHOUT rebuild
       - name: Start containers safely
         run: |
-          docker compose start || docker compose up -d --no-build
+          docker compose start
+          if ($LASTEXITCODE -ne 0) {
+            docker compose up -d --no-build
+          }
+        shell: powershell
 
-      # Restart only app container to load latest code instantly
-      - name: Restart application services
+      # Restart containers to load latest code instantly
+      - name: Restart application containers
         run: docker compose restart app nginx
 
-      # Apply migrations & refresh cache
+      # Run database migrations & clear Laravel cache
       - name: Migrate & clear cache
         run: |
           docker compose exec -T app php artisan migrate --force
