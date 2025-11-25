@@ -12,14 +12,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Start containers
-        run: docker compose up -d --no-build
-        shell: powershell
-
-      - name: Wait for MySQL
-        run: Start-Sleep -Seconds 10
-        shell: powershell
-
       - name: Restart app
         run: docker compose restart app nginx
         shell: powershell
