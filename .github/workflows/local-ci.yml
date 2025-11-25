@@ -13,22 +13,22 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Stop existing containers
-      run: docker compose down || true
+      run: docker compose down
+      continue-on-error: true
 
     - name: Build and start containers
       run: docker compose up -d --build
 
     - name: Wait for MySQL
-      run: |
-        echo "Waiting for MySQL..."
-        sleep 15
+      run: Start-Sleep -Seconds 15
+      shell: powershell
 
     - name: Install dependencies
       run: docker compose exec -T app composer install --no-interaction
 
     - name: Setup .env file
-      run: |
-        docker compose exec -T app cp .env.example .env || true
+      run: docker compose exec -T app cp .env.example .env
+      continue-on-error: true
 
     - name: Generate key
       run: docker compose exec -T app php artisan key:generate --force
@@ -40,10 +40,12 @@ jobs:
       run: docker compose exec -T app php artisan optimize:clear
 
     - name: Run tests
-      run: docker compose exec -T app php artisan test || true
+      run: docker compose exec -T app php artisan test
+      continue-on-error: true
 
     - name: Show status
       run: docker compose ps
 
     - name: Done
-      run: echo " Deployment complete! App running at http://localhost:8000"
+      run: Write-Host " Deployment complete! App running at http://localhost:8000"
+      shell: powershell
