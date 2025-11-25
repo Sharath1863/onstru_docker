@@ -12,8 +12,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Restart app
-        run: docker compose restart app nginx
+      - name: Ensure containers are running
+        run: |
+          $running = docker ps --filter "name=laravel_app" --format "{{.Names}}"
+          if ($running -eq "laravel_app") {
+            Write-Host "Containers running, restarting..."
+            docker compose restart app nginx
+          } else {
+            Write-Host "Containers not running, starting..."
+            docker compose up -d
+          }
+        shell: powershell
+
+      - name: Wait for containers
+        run: Start-Sleep -Seconds 10
         shell: powershell
 
       - name: Run migrations
