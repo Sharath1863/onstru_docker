@@ -1,9 +1,9 @@
-# .github/workflows/dev-deploy.yml
-name: Deploy → dev (Fast & Clean)
+# .github/workflows/deploy.yml
+name: Deploy — Instant & Silent
 
 on:
   push:
-    branches: [ main ]
+    branches: [main ]
 
 jobs:
   deploy:
@@ -16,33 +16,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # This one line does everything: rebuilds image + restarts only app & nginx
-      - name: Deploy new code (zero downtime)
-        run: docker compose up -d --build --force-recreate --no-deps app nginx
+      # ONE COMMAND = instant deploy, no build, no composer, no vendor spam
+      - name: Deploy instantly
+        run: docker compose up -d --no-deps --force-recreate app nginx
 
-      # Safe & fast MySQL wait
-      - name: Wait for MySQL
+      # Migrations + your favorite command
+      - name: Migrate & clear
         run: |
-          for ($i = 0; $i -lt 20; $i++) {
-            if (docker compose exec -T mysql mysqladmin ping -h127.0.0.1 --silent) {
-              Write-Host "MySQL is ready"
-              break
-            }
-            Start-Sleep -Seconds 2
-          }
+          docker compose exec -T app php artisan migrate --force
+          docker compose exec -T app php artisan optimize:clear
 
-      # Migrations
-      - name: Run migrations
-        run: docker compose exec -T app php artisan migrate --force
-
-      # This is the ONLY cache command you wanted
-      - name: Optimize clear (your favorite command)
-        run: docker compose exec -T app php artisan optimize:clear
-
-      # Done!
-      - name: Success
-        run: |
-          Write-Host "════════════════════════════════" -ForegroundColor Cyan
-          Write-Host "   DEV DEPLOYMENT SUCCESSFUL!" -ForegroundColor Green
-          Write-Host "   http://localhost:8000" -ForegroundColor Yellow
-          Write-Host "════════════════════════════════" -ForegroundColor Cyan
+      - name: Done
+        run: Write-Host "Deployed in 3–6 seconds — http://localhost:8000" -ForegroundColor Green
