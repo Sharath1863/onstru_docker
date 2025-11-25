@@ -19,10 +19,6 @@ jobs:
       run: Start-Sleep -Seconds 15
       shell: powershell
 
-    - name: Install dependencies
-      run: docker compose exec -T app composer install --no-interaction
-      continue-on-error: false
-
     - name: Run migrations
       run: docker compose exec -T app php artisan migrate --force
 
