@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted   # Local runner
+    runs-on: self-hosted
 
     steps:
     - name: Checkout code
@@ -29,11 +29,11 @@ jobs:
     - name: Run Migrations
       run: docker compose exec app php artisan migrate --force
 
-    - name: Generate Application Key (only once)
-      run: docker compose exec app php artisan key:generate || echo "Key already set"
+    - name: Generate Key
+      run: docker compose exec app php artisan key:generate || echo "Key already exists"
 
-    - name: Run Laravel Tests (optional)
+    - name: Run Tests
       run: docker compose exec app php artisan test || exit 0
 
-    - name: Restart services
+    - name: Restart Containers
       run: docker compose restart
