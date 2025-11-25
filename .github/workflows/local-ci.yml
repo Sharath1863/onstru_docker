@@ -26,22 +26,6 @@ jobs:
       run: Start-Sleep -Seconds 15
       shell: powershell
 
-    - name: Check if vendor exists
-      id: check_vendor
-      run: |
-        $vendorCheck = docker compose exec -T app test -d vendor
-        if ($LASTEXITCODE -eq 0) {
-          echo "exists=true" >> $env:GITHUB_OUTPUT
-        } else {
-          echo "exists=false" >> $env:GITHUB_OUTPUT
-        }
-      shell: powershell
-      continue-on-error: true
-
-    - name: Install dependencies (first time only)
-      if: steps.check_vendor.outputs.exists == 'false'
-      run: docker compose exec -T app composer install --no-interaction
-
     - name: Run migrations
       run: docker compose exec -T app php artisan migrate --force
 
@@ -49,5 +33,5 @@ jobs:
       run: docker compose exec -T app php artisan optimize:clear
 
     - name: Done
-      run: Write-Host "Deployed! http://localhost:8000"
+      run: Write-Host "✅ Deployed! http://localhost:8000"
       shell: powershell
