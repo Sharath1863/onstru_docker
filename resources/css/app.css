@@ -1,0 +1,81 @@
+/* Bootstrap CSS */
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+/* Optional: your custom styles go here */
+
+
+:root {
+    --themecolor: #FFE000;
+}
+
+
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.basic_txt {
+    color: var(--themecolor) !important;
+}
+
+.basic_border {
+    border: 1px solid var(--themecolor) !important;
+}
+
+.bgc {
+    background-color: var(--themecolor) !important;
+}
+
+.f11 {
+    font-size: 11px !important;
+}
+
+.txtblack {
+    color: black !important;
+    text-decoration-color: var(--themecolor) ;
+}
+
+.input-container {
+    position: relative;
+    margin-top: 10px;
+}
+
+.input-container .firstimg {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+}
+
+.input-container .lastimg {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 15px;
+}
+
+.input-container input,
+.input-container select {
+    padding-left: 40px;
+    height: 45px;
+    width: 100%;
+    background-color: #f9f9f9;
+    border: 1px solid grey !important;
+    outline: none;
+    border-radius: 7px;
+    font-size: 14px;
+}
+
+.input-container input:focus {
+    border: 2px solid var(--themecolor) !important;
+}
+
+#register input::placeholder {
+    font-size: 14px !important;
+}

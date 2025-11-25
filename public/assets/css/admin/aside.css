@@ -1,0 +1,101 @@
+aside ul::-webkit-scrollbar {
+    display: none;
+}
+
+aside ul {
+    scrollbar-width: none !important;
+}
+
+.sidebar .btnname {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 12% 85%;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: var(--fw-sm);
+    text-align: left;
+}
+
+.sidebar ul li a {
+    color: var(--text-secondary);
+    font-weight: var(--fw-sm);
+    transition: var(--transition);
+    padding-bottom: 5px;
+}
+
+.sidebar .collapse li a:hover {
+    color: var(--primary);
+}
+
+.offcanvas {
+    background-color: var(--secondary) !important;
+}
+
+@media screen and (min-width:1140px) and (max-width: 1250px) {
+
+    aside .btnname,
+    aside .righticon i {
+        font-size: 12px !important;
+    }
+
+    aside .btnname img {
+        height: 17px !important;
+    }
+
+    aside .nav img {
+        height: 35px !important;
+    }
+}
+
+@media screen and (min-width: 1140px) {
+
+    /* Aside */
+    aside {
+        height: 100vh;
+        position: sticky;
+        top: 0px;
+        left: 0px;
+        z-index: 999 !important;
+        border-right: 1px solid #E6E4F0;
+    }
+
+    aside .main-ul {
+        height: 84vh;
+        overflow: hidden scroll;
+    }
+
+    .sidebar .btnname {
+        font-size: 14px;
+    }
+
+    .sidebar {
+        padding: 10px 0px 0px 0px;
+        border-radius: 10px;
+    }
+
+    aside .sidebar .nav {
+        border-radius: 12px;
+        padding: 5px;
+    }
+
+    .sidebar ul li a {
+        font-size: 12px;
+    }
+
+}
+
+@media screen and (max-width: 1140px) {
+
+    aside {
+        display: none;
+    }
+
+    .sidebar ul li a {
+        font-size: 12px;
+    }
+
+    .sidebar .btnname {
+        font-size: 14px;
+    }
+
+}

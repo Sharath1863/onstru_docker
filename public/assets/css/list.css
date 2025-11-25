@@ -1,0 +1,293 @@
+.table-wrapper::-webkit-scrollbar,
+.dataTables_wrapper::-webkit-scrollbar {
+    display: none !important;
+}
+
+.table-wrapper,
+.dataTables_wrapper {
+    scrollbar-width: none !important;
+}
+
+.table>:not(caption)>*>* {
+    background-color: transparent !important;
+}
+
+.table tbody tr {
+    background-color: var(--trow-bg) !important;
+    cursor: pointer;
+}
+
+table.dataTable>thead .sorting:after,
+table.dataTable>thead .sorting:before {
+    display: none !important;
+}
+
+table .form-select,
+table .form-control {
+    background-color: var(--secondary);
+}
+
+table.dataTable {
+    margin: 10px 0px !important;
+}
+
+.table thead {
+    background-color: var(--input-bg);
+}
+
+.table tbody td img {
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+}
+
+/* List */
+.listtable {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: var(--secondary);
+    border: 1px solid var(--border);
+}
+
+.filter-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: space-between;
+    align-items: center;
+}
+
+.filter-container-start {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+.filter-container-start select {
+    color: var(--primary);
+    border: 1px solid var(--input-border);
+    border-radius: 5px 0px 0px 5px;
+    margin-left: 0px;
+}
+
+.filter-container-start input {
+    color: var(--primary);
+    border: 1px solid var(--input-border);
+    border-radius: 0px 5px 5px 0px;
+    margin-left: 0px;
+}
+
+.filter-container-end {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 10px;
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: scroll;
+}
+
+.table thead th,
+.table tbody th {
+    color: var(--sub);
+    font-weight: var(--fw-md);
+    text-transform: uppercase;
+}
+
+.table tbody td,
+.table tfoot td {
+    color: var(--text-primary);
+    font-weight: var(--fw-sm);
+    text-transform: capitalize;
+}
+
+.table tbody td i {
+    color: var(--sub);
+    cursor: pointer;
+}
+
+.table h5 {
+    color: var(--text-primary);
+    font-weight: var(--fw-md);
+}
+
+.table h6 {
+    color: var(--text-secondary);
+    font-weight: var(--fw-sm);
+}
+
+.table select,
+.table input {
+    padding: 5px;
+}
+
+.page-link {
+    font-size: 10px;
+    color: var(--sub);
+}
+
+.active>.page-link,
+.page-link.active {
+    background-color: var(--main);
+    border-color: var(--main);
+    color: var(--secondary);
+}
+
+.bottom {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.dataTables_length,
+.dataTables_filter {
+    display: none;
+}
+
+
+@media screen and (min-width: 1140px) {
+
+    /* List */
+    .filter-container-start select {
+        width: 20%;
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+
+    .filter-container-start input {
+        width: 50%;
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+
+    .dataTables_wrapper {
+        width: 100% !important;
+        overflow: auto;
+    }
+
+    .table thead th,
+    .table tbody th {
+        font-size: 12px;
+    }
+
+    .table h6,
+    .table tbody td,
+    .table tfoot td {
+        font-size: 12px;
+    }
+
+    .table h5,
+    .table tbody td i {
+        font-size: 14px;
+    }
+
+    .table select,
+    .table input {
+        font-size: 12px;
+    }
+
+}
+
+@media screen and (min-width: 767px) and (max-width: 1140px) {
+
+    /* List */
+    .filter-container-start select {
+        width: 25%;
+        font-size: 12px;
+        padding: 3px 10px;
+    }
+
+    .filter-container-start input {
+        width: 70%;
+        font-size: 12px;
+        padding: 3px 10px;
+    }
+
+    .dataTables_wrapper {
+        width: 150% !important;
+        overflow: auto;
+    }
+
+    .table thead th,
+    .table tbody th {
+        font-size: 10px;
+    }
+
+    .table h6,
+    .table tbody td,
+    .table tfoot td {
+        font-size: 10px;
+    }
+
+    .table h5,
+    .table tbody td i {
+        font-size: 12px;
+    }
+
+    .table select,
+    .table input {
+        font-size: 10px;
+    }
+
+}
+
+@media screen and (max-width: 767px) {
+
+    /* List */
+    .filter-container {
+        display: block;
+        gap: 0px;
+    }
+
+    .filter-container-start select {
+        width: 40%;
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+
+    .filter-container-start input {
+        width: 60%;
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+
+    .dataTables_wrapper {
+        width: 300% !important;
+        overflow: auto;
+    }
+
+    .filter-container-end,
+    .filter-container-end div {
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    .filter-container-end img {
+        height: 30px !important;
+    }
+
+    .table thead th,
+    .table tbody th {
+        font-size: 10px;
+    }
+
+    .table h6,
+    .table tbody td,
+    .table tfoot td {
+        font-size: 10px;
+    }
+
+    .table h5,
+    .table tbody td i {
+        font-size: 12px;
+    }
+
+    .table select,
+    .table input {
+        padding: 5px;
+    }
+
+}

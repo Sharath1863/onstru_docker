@@ -1,0 +1,228 @@
+.flex-left::-webkit-scrollbar,
+.flex-right::-webkit-scrollbar,
+.suggested::-webkit-scrollbar,
+.home-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.flex-left,
+.flex-right,
+.suggested,
+.home-carousel {
+    scrollbar-width: none !important;
+}
+
+.form-control,
+.form-select {
+    background-color: var(--secondary);
+    color: var(--text-primary);
+    font-size: 12px;
+    font-weight: var(--fw-sm);
+    border: 1px solid var(--input-border);
+    padding: 8px 10px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border: 1px solid var(--main);
+    box-shadow: none;
+    outline: none;
+}
+
+.flex-side {
+    width: 100%;
+    /* height: 100%; */
+    display: grid;
+    justify-content: space-between;
+    align-items: start;
+}
+
+.flex-left,
+.flex-right {
+    left: 0px;
+    z-index: 1 !important;
+    overflow-y: scroll;
+}
+
+.suggested {
+    max-height: 55vh;
+    overflow-y: auto;
+}
+
+.home-post-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.home-post-body {
+    background-color: var(--primary);
+    /* border-radius: 10px; */
+}
+
+.home-post-body img
+.home-post-body video {
+    object-fit: contain;
+    object-position: center;
+    /* border-radius: 10px; */
+}
+
+.home-post-actions .home-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.home-actions i {
+    font-size: 20px;
+}
+
+.home-actions h6 {
+    color: var(--text-secondary) !important;
+    font-size: 14px !important;
+}
+
+.caption {
+    width: 100%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: var(--fw-sm);
+    line-height: 18px;
+}
+
+.caption.expanded {
+    -webkit-line-clamp: unset;
+    overflow: visible;
+    white-space: normal;
+}
+
+.carousel-indicators [data-bs-target] {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--gray);
+    cursor: pointer;
+    border: none;
+}
+
+.carousel-indicators .active {
+    background: var(--main);
+}
+
+.quick-div {
+    cursor: pointer;
+}
+
+.quick-div:hover {
+    transform: scale(0.9);
+    transition: var(--transition);
+}
+
+.home-carousel {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    column-gap: 10px;
+    overflow-x: auto;
+    padding-inline: 10px;
+}
+
+.home-carousel .item .product-card {
+    width: 200px;
+    height: 100%;
+}
+
+@media screen and (min-width: 1024px) {
+
+    .flex-side {
+        grid-template-columns: 26% 46% 26%;
+    }
+
+    .flex-left,
+    .flex-right {
+        position: sticky;
+        top: 13vh;
+    }
+
+    .home-post-body img,
+    .home-post-body video {
+        max-height: 600px;
+        /* aspect-ratio: 6/4; */
+        object-fit: contain;
+    }
+
+}
+
+@media screen and (min-width: 767px) and (max-width: 1024px) {
+
+    .flex-side {
+        grid-template-columns: 23% 52% 23%;
+    }
+
+    .flex-left,
+    .flex-right {
+        position: sticky;
+        top: 15vh;
+    }
+
+    .home-post-body img,
+    .home-post-body video {
+        max-height: 600px;
+        object-fit: contain;
+    }
+
+}
+
+@media screen and (max-width: 767px) {
+
+    .flex-side {
+        width: 100%;
+        margin: 0px auto;
+        display: block;
+        row-gap: 20px;
+    }
+
+    .flex-left,
+    .flex-right {
+        display: none;
+    }
+
+    .home-post-body img,
+    .home-post-body video {
+        max-height: 500px;
+        object-fit: contain;
+    }
+
+}
+
+.video-wrapper {
+    position: relative;
+    cursor: pointer;
+}
+
+.video-play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.5);
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 24px;
+    height: 50px;
+    width: 50px;
+    display: none; /* hidden by default */
+}
+
+.video-wrapper:hover .video-play-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

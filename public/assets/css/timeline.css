@@ -1,0 +1,103 @@
+.timeline {
+    width: 100%;
+    position: relative;
+}
+
+.timeline:before {
+    content: '';
+    position: absolute;
+    top: 2%;
+    left: calc(3%);
+    bottom: 0;
+    width: 2px;
+    background: #DADADA;
+}
+
+.timeline:after {
+    content: "";
+    display: table;
+}
+
+.entry {
+    clear: both;
+    position: relative;
+}
+
+.entry .title {
+    position: relative;
+}
+
+.entry:not(.completed) .title:before {
+    content: '';
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    top: 0%;
+    left: 0%;
+    /* border-radius: 100%; */
+    z-index: 99;
+}
+
+.entry:not(.completed) .title:before {
+    border: 3px solid var(--main);
+    background-color: var(--secondary);
+}
+
+
+.entry.placed .title:before {
+    background-image: url('../images/icon_placed.png');
+    border: none;
+    background-size: cover;
+    background-position: center;
+}
+
+.entry.processing .title:before {
+    background-image: url('../images/icon_stock.png');
+    border: none;
+    background-size: cover;
+    background-position: center;
+}
+
+.entry.delivery .title:before {
+    background-image: url('../images/icon_delivery.png');
+    border: none;
+    background-size: cover;
+    background-position: center;
+}
+
+.entry.delivered .title:before {
+    background-image: url('../images/icon_delivered.png');
+    border: none;
+    background-size: cover;
+    background-position: center;
+}
+
+.entry .entrybody {
+    margin-bottom: 15px;
+    float: right;
+    width: 90%;
+    border-radius: 4px;
+}
+
+/* Task Card CSS */
+.timeline-main h6 {
+    font-weight: 600;
+    font-size: 14px;
+    color: #000;
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+
+.timeline-descp h6 {
+    font-weight: var(--fw-sm);
+    font-size: 10px;
+    color: var(--text-secondary);
+    margin-bottom: 0px;
+}
+
+.timeline-descp h5 {
+    font-weight: var(--fw-md);
+    font-size: 12px;
+    color: var(--text-primary);
+    margin-block: 5px;
+}

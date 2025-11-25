@@ -1,0 +1,211 @@
+/* Button */
+/* Aside Button */
+.asidebtn {
+    background-color: transparent;
+    color: var(--sub);
+    font-size: 14px;
+    padding: 8px 10px;
+    border: 2px solid transparent;
+    width: 95%;
+    font-weight: var(--fw-md);
+    border-radius: 5px;
+    display: grid;
+    grid-template-columns: 85% 15%;
+    justify-content: space-between;
+    align-items: center;
+    transition: var(--transition);
+}
+
+/* List Button */
+.listbtn {
+    background-color: var(--main);
+    color: var(--text-primary);
+    font-weight: var(--fw-md);
+    border: 2px solid var(--main);
+    border-radius: 5px;
+}
+
+/* Form Button */
+.formbtn {
+    background-color: var(--main);
+    color: var(--text-primary);
+    font-weight: var(--fw-md);
+    border: 2px solid var(--main);
+    border-radius: 5px;
+}
+
+/* List td Button */
+.listtdbtn {
+    background-color: var(--main);
+    color: var(--text-primary);
+    font-size: 10px;
+    font-weight: var(--fw-md);
+    border: 1px solid var(--main);
+    border-radius: 2px;
+    padding: 3px 12px;
+}
+
+/* Export Button */
+.exportbtn {
+    background-color: var(--secondary);
+    color: var(--sub);
+    font-weight: var(--fw-md);
+    border: 2px solid var(--input-border);
+    border-radius: 5px;
+}
+
+/* Profile tabs */
+.profiletabs {
+    background-color: transparent;
+    color: var(--tdata);
+    font-weight: var(--fw-md);
+    border: none;
+    border-bottom: 2px solid transparent;
+    transition: var(--transition);
+}
+
+/* Modal Button */
+.modalbtn {
+    background-color: var(--main);
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: var(--fw-md);
+    border: 1px solid var(--main);
+    border-radius: 5px;
+    padding: 5px 50px;
+}
+
+/* Cancel Button */
+.cancelbtn {
+    background-color: var(--secondary);
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: var(--fw-md);
+    border: 1px solid var(--main);
+    border-radius: 5px;
+    padding: 5px 50px;
+}
+
+/* Green Button */
+.greenbtn {
+    background-color: var(--green);
+    color: var(--secondary);
+    font-weight: var(--fw-md);
+    border: 2px solid var(--input-border);
+    border-radius: 5px;
+}
+
+.redbtn {
+    background-color: var(--red);
+    color: var(--secondary);
+    font-weight: var(--fw-md);
+    border: 2px solid var(--input-border);
+    border-radius: 5px;
+}
+
+/* Box Shadow / Transition */
+.modalbtn,
+.cancelbtn,
+.headtabs,
+.listbtn,
+.formbtn,
+.listtdbtn,
+.greenbtn,
+.redbtn,
+.exportbtn {
+    transition: var(--transition);
+    box-shadow: var(--box-shadow);
+}
+
+/* Button Hover */
+.asidebtn.active,
+.asidebtn:hover {
+    background-color: var(--thead-bg);
+    color: var(--text-primary);
+    border: 2px solid var(--main);
+}
+
+.cancelbtn:hover {
+    background-color: var(--main);
+    color: var(--secondary);
+}
+
+.headtabs.active,
+.headtabs:hover {
+    background-color: var(--sub);
+    color: var(--secondary);
+}
+
+.greenbtn:hover,
+.redbtn:hover,
+.listbtn:hover,
+.formbtn:hover,
+.modalbtn:hover,
+.listtdbtn:hover {
+    background-color: var(--secondary);
+    color: var(--text-primary);
+}
+
+.exportbtn.active,
+.exportbtn:hover {
+    background-color: var(--sub);
+    color: var(--secondary);
+}
+
+.profiletabs:hover,
+.profiletabs.active {
+    color: var(--sub);
+    border-bottom: 2px solid var(--sub);
+}
+
+
+@media screen and (min-width: 1140px) {
+
+    .listbtn,
+    .formbtn,
+    .greenbtn,
+    .redbtn,
+    .exportbtn {
+        font-size: 12px;
+        padding: 4px 25px;
+    }
+
+    .profiletabs {
+        font-size: 14px;
+    }
+
+}
+
+@media screen and (min-width: 767px) and (max-width: 1140px) {
+
+    .listbtn,
+    .formbtn,
+    .greenbtn,
+    .redbtn,
+    .exportbtn {
+        font-size: 12px;
+        padding: 4px 25px;
+    }
+
+    .profiletabs {
+        font-size: 14px;
+    }
+
+}
+
+@media screen and (max-width: 767px) {
+
+    .listbtn,
+    .formbtn,
+    .greenbtn,
+    .redbtn,
+    .exportbtn {
+        font-size: 12px;
+        padding: 4px 25px;
+    }
+
+    .profiletabs {
+        font-size: 14px;
+    }
+
+}

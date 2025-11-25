@@ -1,0 +1,141 @@
+.main-div .dashboard-cards .cards .cardsdiv:hover {
+    border: 1px solid var(--sub) !important;
+    transform: translate(0px, -5px);
+    transition: 0.5s ease-in-out;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.main-div .dashboard-cards .row .cards .cardsdiv {
+    padding: 15px;
+    background-color: var(--secondary);
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.main-div .dashboard-cards .row .cards .cardsdiv::-webkit-scrollbar {
+    display: none;
+}
+
+.main-div .dashboard-cards .row .cards .cardsdiv {
+    scrollbar-width: none !important;
+}
+
+.cardshead {
+    display: grid;
+    grid-template-columns: 70% 30%;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.cardsct {
+    display: grid;
+    grid-template-columns: 25% 2% 25% 2% 25% 20%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cardsct .cards_01.img-div {
+    height: 50px;
+    width: 50px;
+    background-color: var(--gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    border-radius: 50%;
+}
+
+.cardsct .cards_01 img {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+}
+
+.cardsct .brdr {
+    width: 1px;
+    height: 100%;
+    display: block;
+    margin: auto;
+    background-color: var(--input-border);
+}
+
+.cardshead h6 {
+    font-size: 12px;
+    font-weight: var(--fw-xl);
+    text-transform: uppercase;
+    color: var(--text-primary);
+}
+
+.cardsct .cards_01 h6 {
+    color: var(--text-secondary);
+    font-weight: var(--fw-md);
+}
+
+.cardsct .cards_01 h5 {
+    color: var(--text-primary);
+    font-weight: var(--fw-lg);
+    margin-bottom: 0px;
+}
+
+.cardstotal h6 {
+    color: var(--text-secondary);
+    font-weight: var(--fw-md);
+    margin-bottom: 0px;
+}
+
+@media screen and (min-width: 1140px) {
+
+    /* Card CSS */
+    .cardsct .cards_01 h6 {
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+
+    .cardsct .cards_01 h5 {
+        font-size: 18px;
+    }
+
+    .cardstotal h6 {
+        font-size: 12px;
+    }
+
+}
+
+@media screen and (min-width: 767px) and (max-width: 1140px) {
+
+    /* Card CSS */
+    .cardsct .cards_01 h6 {
+        font-size: 10px;
+        margin-bottom: 5px;
+    }
+
+    .cardsct .cards_01 h5 {
+        font-size: 14px;
+    }
+
+    .cardstotal h6 {
+        font-size: 10px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+
+    /* Card CSS */
+    .cardsct .cards_01 h6 {
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+
+    .cardsct .cards_01 h5 {
+        font-size: 18px;
+    }
+
+    .cardstotal h6 {
+        font-size: 12px;
+    }
+
+}

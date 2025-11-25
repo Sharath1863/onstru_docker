@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    height: 100vh;
+}
+
+.pdf-main {
+    width: 100%;
+    height: 100%;
+    border: 2px solid #505050;
+    padding: 0px;
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Outfit', sans-serif;
+    position: relative;
+}
+
+.pdf-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    filter: opacity(0.1);
+}
+
+.pdf-header {
+    background-color: #FFE000;
+    padding: 10px 15px;
+    display: grid;
+    grid-template-columns: repeat(3, 33.3%);
+    align-items: center;
+    justify-content: space-between;
+    /* position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10; */
+    width: 100%;
+}
+
+.midthree {
+    display: grid;
+    grid-template-columns: repeat(3, 33.3%);
+    align-items: start;
+    justify-content: space-between;
+}
+
+.midtwo {
+    display: grid;
+    grid-template-columns: repeat(2, 49%);
+    align-items: start;
+    justify-content: space-between;
+}
+
+.pdf-mid,
+.pdf-end,
+.pdf-table {
+    padding: 0px 15px;
+}
+
+.pdf-header h5 {
+    color: #000;
+    font-size: 10px;
+    font-weight: 500;
+}
+
+.pdf-header h4 {
+    color: #000;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 0px;
+}
+
+.pdf-table th {
+    background-color: #FFE000;
+    text-transform: uppercase;
+}
+
+.pdf-billing h5,
+.pdf-serial h5,
+.pdf-table th {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1F1F1F;
+    margin-bottom: 8px;
+}
+
+.pdf-billing h6,
+.pdf-serial h6,
+.pdf-table td {
+    font-size: 11px;
+    font-weight: 500;
+    color: #27292e;
+    margin-bottom: 5px;
+}
+
+.table tfoot td {
+    border: 0px !important;
+}
+
+.pdf-end {
+    margin-top: 100px;
+}
+
+@media print {
+    @page {
+        margin: 2mm;
+    }
+}

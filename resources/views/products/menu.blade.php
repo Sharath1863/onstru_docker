@@ -1,0 +1,125 @@
+<li class="mb-3">
+    <div class="body-head d-block mb-3">
+        <h5>
+            <i class="fas fa-filter pe-2"></i> Filter
+        </h5>
+    </div>
+</li>
+<hr>
+<li class="mb-3">
+    <input type="text" name="keyword" id="keywordSearch" class="form-control" placeholder="Search"
+        value="{{ request('keyword') }}">
+</li>
+<!-- <hr> -->
+<li class="mb-3">
+    <button class="filterbtn mx-auto collapsed" data-bs-toggle="collapse" data-bs-target="#collapse"
+        aria-expanded="false">
+        <div class="btnname">
+            <span>Category</span>
+        </div>
+        <div class="righticon d-flex ms-auto">
+            <i class="fa-solid fa-angle-right toggle-icon"></i>
+        </div>
+    </button>
+    <div class="collapse" id="collapse">
+        <ul class="btn-toggle-nav list-unstyled text-start ps-3 pe-0 py-2">
+            @foreach ($category as $cat)
+                <li>
+                    <input type="checkbox" class="filter-checkbox category-filter" id="{{ $cat->value }}"
+                        value="{{ $cat->value }}">
+                    <label for="{{ $cat->value }}">{{ $cat->value }}</label>
+                </li>
+            @endforeach
+        </ul>
+    </div>
+</li>
+<hr>
+{{-- <li class="mb-3">
+    <button class="filterbtn mx-auto collapsed" data-bs-toggle="collapse" data-bs-target="#collapse0"
+        aria-expanded="false">
+        <div class="btnname">
+            <span>Availability</span>
+        </div>
+        <div class="righticon d-flex ms-auto">
+            <i class="fa-solid fa-angle-right toggle-icon"></i>
+        </div>
+    </button>
+    <div class="collapse" id="collapse0">
+        <ul class="btn-toggle-nav list-unstyled text-start ps-3 pe-0 py-2">
+            @foreach (['In Stock', 'Out Of Stock'] as $stk)
+            <li>
+                <input type="checkbox" class="filter-checkbox stock-filter" id="{{ $stk }}" value="{{ $stk }}">
+                <label for="{{ $stk }}">{{ $stk }}</label>
+            </li>
+            @endforeach
+        </ul>
+    </div>
+</li>
+<hr> --}}
+<li class="mb-3">
+    <button class="filterbtn mx-auto collapsed" data-bs-toggle="collapse" data-bs-target="#collapse1"
+        aria-expanded="false">
+        <div class="btnname">
+            <span>Location</span>
+        </div>
+        <div class="righticon d-flex ms-auto">
+            <i class="fa-solid fa-angle-right toggle-icon"></i>
+        </div>
+    </button>
+    <div class="collapse" id="collapse1">
+        <ul class="btn-toggle-nav list-unstyled text-start ps-3 pe-0 py-2">
+            @foreach ($locations as $location)
+                <li>
+                    <input type="checkbox" class="filter-checkbox loc-filter" id="{{ $location->value }}"
+                        value="{{ $location->value }}">
+                    <label for="{{ $location->value }}">{{ $location->value }}</label>
+                </li>
+            @endforeach
+        </ul>
+    </div>
+</li>
+<hr>
+<li class="mb-3">
+    <button class="filterbtn mx-auto collapsed" data-bs-toggle="collapse" data-bs-target="#collapse2"
+        aria-expanded="false">
+        <div class="btnname">
+            <span>Price Range</span>
+        </div>
+        <div class="righticon d-flex ms-auto">
+            <i class="fa-solid fa-angle-right toggle-icon"></i>
+        </div>
+    </button>
+    <div class="collapse" id="collapse2">
+        <ul class="btn-toggle-nav list-unstyled text-start ps-3 pe-0 py-2">
+            <li class="d-flex align-items-center flex-wrap gap-2">
+                <input type="number" id="minPrice" class="form-control" style="width: 40%;" placeholder="Minimum">
+                <span style="font-size: 12px">to</span>
+                <input type="number" id="maxPrice" class="form-control" style="width: 40%;" placeholder="Maximum">
+            </li>
+        </ul>
+    </div>
+</li>
+<hr>
+<li class="mb-3">
+    <button class="filterbtn mx-auto collapsed" data-bs-toggle="collapse" data-bs-target="#collapse3"
+        aria-expanded="false">
+        <div class="btnname">
+            <span>Highlighted</span>
+        </div>
+        <div class="righticon d-flex ms-auto">
+            <i class="fa-solid fa-angle-right toggle-icon"></i>
+        </div>
+    </button>
+    <div class="collapse" id="collapse3">
+        <ul class="btn-toggle-nav list-unstyled text-start ps-3 pe-0 py-2">
+            @foreach ([1 => 'Highlighted', 0 => 'Not Highlighted'] as $key => $label)
+                <li>
+                    <input type="checkbox" class="filter-checkbox highlight-filter" id="highlight_{{ $key }}"
+                        value="{{ $key }}">
+                    <label for="highlight_{{ $key }}">{{ $label }}</label>
+                </li>
+            @endforeach
+        </ul>
+    </div>
+</li>
+<hr>

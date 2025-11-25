@@ -1,0 +1,132 @@
+.modal {
+    --bs-modal-padding: 0rem 1rem 1rem 1rem;
+}
+
+.modal-body::-webkit-scrollbar {
+    width: 10px;
+    cursor: pointer;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: var(--secondary);
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background-color: #D9D9D9;
+    border-radius: 10px;
+    border: 3px solid #f4f4f4;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background-color: var(--main);
+}
+
+.modal-body {
+    scrollbar-width: none !important;
+}
+
+.modal-content {
+    background-color: var(--secondary) !important;
+}
+
+.modal h4 {
+    color: var(--sub);
+    font-weight: var(--fw-xl);
+    text-decoration: 1.5px underline solid var(--input-border);
+    font-size: 18px;
+}
+
+.modal form label,
+.modal label {
+    color: var(--text-primary);
+    font-weight: var(--fw-md);
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.modal form h6,
+.modal h6 {
+    color: var(--text-primary);
+    font-weight: var(--fw-md);
+    font-size: 14px;
+}
+
+.modal .col-form-label {
+    padding-bottom: 0px !important;
+}
+
+.modal .form-control,
+.modal .form-select {
+    background-color: var(--input-bg) !important;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    font-weight: var(--fw-sm);
+    font-size: 12px;
+}
+
+.modal table th {
+    padding: 8px 5px;
+    font-size: 12px;
+    color: var(--sub);
+    font-weight: var(--fw-xl);
+    text-transform: uppercase;
+    background-color: var(--input-bg) !important;
+}
+
+.modal table td {
+    padding: 8px 5px;
+    font-size: 12px;
+    color: var(--text-primary);
+    font-weight: var(--fw-md);
+    background-color: var(--secondary);
+}
+
+.modal .modal-img {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 20% 80%;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.modal .modal-img h5 {
+    color: var(--sub);
+    font-size: 14px;
+    font-weight: var(--fw-md);
+    margin-top: 5px;
+}
+
+.modal .modal-img h6 {
+    color: var(--light);
+    font-size: 12px;
+    font-weight: var(--fw-sm);
+    margin-top: 0px;
+}
+
+@media screen and (min-width: 767px) {
+    .modal .modal-img img {
+        height: 75px;
+        border-radius: 5px;
+        object-fit: cover;
+        object-position: center;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .modal .modal-img {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 28% 72%;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+    .modal .modal-img img {
+        height: 60px;
+        border-radius: 5px;
+        object-fit: cover;
+        object-position: center;
+    }
+}

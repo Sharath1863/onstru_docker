@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "9KW3H25XFW.com.onstru.superapp",
+        "paths": [ "/","/*" ]
+      }
+    ]
+  }
+}

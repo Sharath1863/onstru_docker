@@ -1,0 +1,137 @@
+.profile-cards {
+    background-color: var(--secondary);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow:
+        0 4px 6px rgba(0, 0, 0, 0.08),
+        0 1px 3px rgba(0, 0, 0, 0.04);
+    padding: 15px;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.profile-cards .cards-content h4 {
+    color: var(--text-primary);
+    font-weight: var(--fw-lg);
+}
+
+.profile-cards .cards-content h5 {
+    color: var(--text-primary);
+    font-weight: var(--fw-md);
+}
+
+.profile-cards .cards-content h6 {
+    color: var(--text-secondary);
+    font-weight: var(--fw-sm);
+}
+
+.profile-grid {
+    display: grid;
+    align-items: center;
+    justify-content: space-between;
+    row-gap: 15px;
+}
+
+.cards-grid {
+    display: grid;
+    align-items: start;
+    justify-content: space-between;
+}
+
+.need-div {
+    background: #FAF7E2;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.img-container {
+    position: relative !important;
+}
+
+.img-container label {
+    background-color: var(--main);
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 5%;
+    left: 63%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    cursor: pointer;
+}
+
+.img-container label span {
+    color: var(--primary);
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+}
+
+@media screen and (min-width: 1200px) {
+
+    .profile-grid {
+        grid-template-columns: 25% 70%;
+    }
+
+    .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .profile-cards .cards-content h4 {
+        font-size: 13px;
+    }
+
+    .profile-cards .cards-content h5,
+    .profile-cards .cards-content h6 {
+        font-size: 12px;
+    }
+
+}
+
+@media screen and (min-width: 767px) and (max-width: 1200px) {
+
+    .profile-grid {
+        grid-template-columns: 25% 70%;
+    }
+
+    .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .profile-cards .cards-content h4 {
+        font-size: 12px;
+    }
+
+    .profile-cards .cards-content h5,
+    .profile-cards .cards-content h6 {
+        font-size: 10px;
+    }
+
+}
+
+@media screen and (max-width: 767px) {
+
+    .profile-grid,
+    .cards-grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .profile-cards .cards-content h4 {
+        font-size: 12px;
+    }
+
+    .profile-cards .cards-content h5,
+    .profile-cards .cards-content h6 {
+        font-size: 10px;
+    }
+
+}

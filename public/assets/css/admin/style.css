@@ -1,0 +1,91 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: var(--secondary);
+    font-family: var(--main-font);
+    /* user-select: none; */
+}
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+li {
+    list-style-type: none;
+    cursor: pointer;
+}
+
+input {
+    outline: none;
+}
+
+input:focus {
+    border: 1px solid #228BE6;
+}
+
+label span {
+    color: var(--mandatory);
+}
+
+html::-webkit-scrollbar {
+    width: 12px;
+    cursor: pointer;
+}
+
+html::-webkit-scrollbar-track {
+    background: #f4f4f4;
+}
+
+html::-webkit-scrollbar-thumb {
+    background-color: #D9D9D9;
+    border-radius: 10px;
+    border: 3px solid #f4f4f4;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+    background-color: var(--main);
+}
+
+html {
+    scrollbar-width: none !important;
+}
+
+.text-danger {
+    color: var(--red) !important;
+}
+
+.text-success {
+    color: var(--green) !important;
+}
+
+.avatar {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Toastr */
+.toast-main {
+    position: fixed;
+    bottom: 2%;
+    right: 2%;
+}
+
+.toast {
+    --bs-toast-border-radius: 10px !important;
+}
+
+.toast-body {
+    background: var(--primary) !important;
+    color: var(--secondary);
+    font-size: 12px !important;
+    text-transform: capitalize;
+    border-radius: 10px !important;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    column-gap: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+}

@@ -1,0 +1,120 @@
+* {
+    scroll-behavior: smooth;
+    transition: 1s ease-in-out;
+    font-family: 'Outfit', sans-serif;
+    margin: 0px;
+    padding: 0px;
+}
+
+/* Background */
+.background {
+    height: 300px;
+    background-color: var(--main);
+}
+
+.bgct {
+    color: var(--text-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+}
+
+.bgct h1 {
+    font-size: 40px;
+    font-weight: var(--fw-xxl);
+    text-align: center;
+}
+
+.bgct span {
+    font-size: 15px;
+    font-weight: 500;
+    background-color: var(--primary);
+    color: var(--main);
+    padding: 5px 20px;
+    border-radius: 20px;
+}
+
+/* Back To Top */
+.back2top {
+    background-color: var(--main);
+    color: var(--text-primary);
+    font-size: 20px;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    cursor: pointer;
+    border: 1px solid var(--main);
+    transition: 0.3s ease-in-out;
+    z-index: 100;
+}
+
+/* Privacy Content */
+.content {
+    background-color: var(--secondary);
+    border-radius: 10px;
+    width: 85%;
+    margin: 0 auto;
+    padding: 30px;
+    margin-top: -50px;
+}
+
+.content h2 {
+    color: var(--text-primary);
+    font-size: 30px;
+    font-weight: var(--fw-xl);
+}
+
+.content h3 {
+    color: var(--sub);
+    font-size: 24px;
+    font-weight: var(--fw-xl);
+}
+
+.content h5 {
+    color: var(--text-primary);
+    font-size: 18px;
+    font-weight: var(--fw-lg);
+}
+
+.content h6 {
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: var(--fw-sm);
+    line-height: 25px;
+    margin-bottom: 0px;
+}
+
+.contentlist {
+    margin-top: 40px;
+}
+
+.contentlist ul {
+    padding-left: 0px;
+}
+
+.content li {
+    list-style-type: none;
+    margin-bottom: 30px;
+}
+
+@media screen and (max-width: 768px) {
+    .content {
+        width: 95%;
+    }
+
+}
+
+@media screen and (min-width: 768px) and (max-width: 1098px) {
+    .content {
+        width: 90%;
+    }
+
+}

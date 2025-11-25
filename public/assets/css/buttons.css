@@ -1,0 +1,404 @@
+/* Buttons */
+.loginbtn {
+    background-color: var(--main);
+    color: var(--text-primary);
+    padding: 6px 15px;
+    font-weight: var(--fw-lg);
+    border: 2px solid var(--main);
+    text-transform: uppercase;
+    border-radius: 8px;
+    letter-spacing: 0.5px;
+}
+
+.googlebtn {
+    background-color: var(--secondary);
+    color: var(--text-primary);
+    padding: 6px 15px;
+    font-weight: var(--fw-md);
+    border: 2px solid var(--primary);
+    border-radius: 20px;
+}
+
+.filterbtn {
+    background-color: transparent;
+    color: var(--text-primary);
+    font-size: 14px;
+    padding: 0px 10px;
+    border: 2px solid transparent;
+    width: 100%;
+    font-weight: var(--fw-md);
+    border-radius: 5px;
+    display: grid;
+    grid-template-columns: 85% 15%;
+    justify-content: space-between;
+    align-items: center;
+    transition: var(--transition);
+}
+
+.listtdbtn {
+    background-color: var(--main);
+    color: var(--text-primary);
+    font-size: 10px;
+    font-weight: var(--fw-md);
+    border: 1px solid var(--main);
+    border-radius: 2px;
+}
+
+.listtdbtn.disabled {
+    background-color: #ffee003c;
+}
+
+.profilebtn {
+    background-color: var(--secondary);
+    color: var(--text-primary);
+    font-weight: var(--fw-md);
+    border: none;
+    border-radius: 5px;
+    padding: 6px 15px;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
+}
+
+.producttabs {
+    background-color: var(--secondary);
+    color: var(--text-primary);
+    font-weight: var(--fw-md);
+    border: none;
+    border-bottom: 2px solid var(--secondary);
+    border-radius: 0px;
+    padding: 6px 15px;
+    transition: var(--transition);
+}
+
+.locbtn {
+    background-color: var(--blue);
+    color: var(--secondary);
+    font-weight: var(--fw-md);
+    border: 2px solid var(--blue);
+    border-radius: 5px;
+    padding: 5px 15px;
+}
+
+.darkbtn,
+.editbtn {
+    background-color: var(--primary);
+    color: var(--secondary);
+    font-weight: var(--fw-md);
+    border: 2px solid var(--primary);
+    border-radius: 5px;
+    padding: 5px 15px;
+}
+
+.followbtn {
+    background-color: transparent;
+    color: var(--secondary);
+    font-weight: var(--fw-md);
+    padding: 3px 15px;
+    border: 1px solid var(--secondary);
+    border-radius: 5px;
+}
+
+.removebtn {
+    background-color: var(--primary);
+    color: var(--secondary);
+    padding: 5px 15px;
+    font-weight: var(--fw-md);
+    border: 2px solid var(--primary);
+    border-radius: 5px;
+}
+
+.formbtn,
+.listbtn,
+.followersbtn {
+    background-color: var(--main);
+    color: var(--primary);
+    padding: 5px 15px;
+    font-weight: var(--fw-md);
+    border: 2px solid var(--main);
+    border-radius: 5px;
+}
+
+.followingbtn {
+    background-color: var(--border);
+    color: var(--primary);
+    padding: 5px 15px;
+    font-weight: var(--fw-md);
+    border: 2px solid var(--border);
+    border-radius: 5px;
+}
+
+.iconbtn {
+    background-color: var(--secondary);
+    color: var(--primary);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 5px 15px;
+}
+
+.actionbtn {
+    background-color: transparent;
+    font-weight: var(--fw-sm);
+    border: none;
+}
+
+.sharebtn {
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.addreadybtn {
+    background-color: var(--secondary);
+    color: var(--text-primary);
+    font-weight: var(--fw-md);
+    border: 2px solid var(--border);
+    border-radius: 5px;
+    padding: 5px 15px;
+}
+
+.readybtn {
+    background-color: var(--green);
+    color: var(--secondary);
+    font-weight: var(--fw-md);
+    border: 2px solid var(--green);
+    border-radius: 5px;
+    padding: 5px 15px;
+}
+
+.postbtn {
+    background-color: var(--main);
+    color: var(--text-primary);
+    text-align: left;
+    text-transform: uppercase;
+    font-weight: var(--fw-lg);
+    border: 2px solid var(--main);
+    border-radius: 0px;
+    padding: 8px 15px;
+}
+
+.reelbtn {
+    background-color: transparent;
+    color: var(--secondary);
+    text-align: left;
+    text-transform: uppercase;
+    font-weight: var(--fw-lg);
+    border: 2px solid var(--main);
+    border-radius: 3px;
+    padding: 5px 15px;
+}
+
+.chatbtn {
+    background-color: var(--main);
+    color: var(--text-primary);
+    font-weight: var(--fw-md);
+    font-size: 12px;
+    border: 2px solid var(--main);
+    border-radius: 5px;
+    padding: 8px 15px;
+}
+
+.loadbtn {
+    background-color: transparent;
+    color: var(--text-secondary);
+    font-weight: var(--fw-md);
+    font-size: 12px;
+    border: none;
+    padding: 0px;
+}
+
+#hubAccordion .accordion-header,
+#trackAccord .accordion-header {
+    color: var(--text-secondary);
+    font-weight: var(--fw-md);
+    font-size: 12px;
+    border: none;
+    padding: 5px 15px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+#hubAccordion .accordion-header:hover .body-head h6,
+#trackAccord .accordion-header:hover .body-head h6 {
+    color: var(--secondary) !important;
+}
+
+.postbtn:hover i,
+.reelbtn:hover i {
+    transform: translateX(10px);
+}
+
+/* Hover */
+.loginbtn:hover,
+.listbtn:hover,
+.formbtn:hover,
+.chatbtn:hover,
+.followersbtn:hover,
+.listtdbtn:hover {
+    background-color: var(--secondary);
+}
+
+.googlebtn:hover,
+.followingbtn:hover,
+.addreadybtn:hover {
+    background-color: var(--primary);
+    color: var(--secondary);
+}
+
+.profilebtn:hover,
+.profilebtn.active {
+    background-color: var(--main);
+}
+
+.producttabs:hover,
+.producttabs.active {
+    border-bottom: 2px solid var(--main);
+}
+
+.locbtn:hover,
+.darkbtn:hover,
+.editbtn:hover,
+.removebtn:hover,
+.readybtn:hover {
+    background-color: var(--secondary);
+    color: var(--primary);
+}
+
+.reelbtn:hover {
+    background-color: var(--main);
+    color: var(--text-primary);
+}
+
+.actionbtn:hover {
+    background-color: transparent;
+    color: var(--text-primary);
+    /* box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.338); */
+}
+
+/* Transition */
+.loginbtn,
+.formbtn,
+.listbtn,
+.locbtn,
+.darkbtn,
+.editbtn,
+.removebtn,
+.addreadybtn,
+.followersbtn,
+.followingbtn,
+.readybtn {
+    transition: var(--transition);
+    box-shadow: var(--box-shadow);
+}
+
+@media screen and (min-width: 1140px) {
+
+    .actionbtn {
+        font-size: 20px;
+    }
+
+    .loginbtn,
+    .googlebtn,
+    .producttabs {
+        font-size: 14px;
+    }
+
+    .darkbtn,
+    .locbtn,
+    .editbtn,
+    .postbtn,
+    .reelbtn,
+    .iconbtn,
+    .profilebtn {
+        font-size: 12px;
+    }
+
+    .listbtn,
+    .formbtn,
+    .followbtn,
+    .followersbtn,
+    .followingbtn,
+    .removebtn,
+    .addreadybtn,
+    .readybtn {
+        font-size: 10px;
+    }
+}
+
+@media screen and (min-width: 767px) and (max-width: 1140px) {
+
+    .actionbtn {
+        font-size: 18px;
+    }
+
+    .loginbtn,
+    .googlebtn,
+    .producttabs {
+        font-size: 14px;
+    }
+
+    .darkbtn,
+    .locbtn,
+    .postbtn,
+    .reelbtn,
+    .iconbtn,
+    .profilebtn {
+        font-size: 12px;
+    }
+
+    .formbtn,
+    .listbtn,
+    .editbtn,
+    .followbtn,
+    .followersbtn,
+    .followingbtn,
+    .removebtn,
+    .addreadybtn,
+    .readybtn {
+        font-size: 10px !important;
+    }
+}
+
+@media screen and (max-width: 767px) {
+
+    .actionbtn,
+    .actionbtn:hover {
+        color: var(--secondary);
+        font-size: 22px;
+    }
+
+    .loginbtn,
+    .formbtn,
+    .darkbtn,
+    .listbtn,
+    .googlebtn,
+    .profilebtn,
+    .producttabs,
+    .locbtn,
+    .editbtn,
+    .iconbtn,
+    .postbtn,
+    .reelbtn,
+    .followbtn,
+    .followersbtn,
+    .followingbtn,
+    .removebtn,
+    .addreadybtn,
+    .readybtn {
+        font-size: 10px !important;
+    }
+}
+
+button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}

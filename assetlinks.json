@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.onstru.superapp",
+      "sha256_cert_fingerprints": [
+        "59:1E:BB:37:37:8D:E7:FD:F6:F2:01:63:18:5F:88:1E:93:1A:E1:14:35:60:6D:72:08:05:AF:3B:3F:04:99:6A",
+        "E1:93:B4:92:AB:BD:66:15:A7:25:28:CD:E0:B8:6F:C5:F3:2B:D5:A0:23:DA:3F:11:92:F9:D6:FE:9D:B4:C8:DA"
+      ]
+    }
+  }
+]

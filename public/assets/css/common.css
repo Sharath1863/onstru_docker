@@ -1,0 +1,265 @@
+:root {
+    --bg: #A2A0A0;
+    --main: #F8E528;
+    --sub: #091E42;
+    --primary: #000;
+    --secondary: #fff;
+    --text-primary: #1f1f1f;
+    --text-secondary: #5a6272;
+    --border: #D9D9D9;
+    --input-border: #B4B4B4;
+    --input-bg: #F9F9F9;
+    --mandatory: #ff0000;
+    --gray: #EEEEEE;
+    --green: #037847;
+    --red: #DC2626;
+    --blue: #3860C3;
+    --light-green: #38CB8933;
+    --light-red: #d4000033;
+    --light-yellow: #ffe1005c;
+    --light-grey: #4f55616e;
+    --box-shadow: 0 0 .875rem 0 rgba(33, 37, 41, .05);
+    --transition: 0.3s ease-in-out;
+
+    --primary-font: 'Poppins', sans-serif;
+    --fw-ms: 300;
+    --fw-sm: 400;
+    --fw-md: 500;
+    --fw-lg: 600;
+    --fw-xl: 700;
+    --fw-xxl: 800;
+}
+
+.main-div {
+    margin-top: 20px;
+}
+
+/* Headers */
+.body-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.main-div .body-head h4 {
+    color: var(--sub);
+    font-weight: var(--fw-xl);
+    margin-bottom: 0px;
+}
+
+.main-div .body-head h5 {
+    color: var(--text-primary);
+    font-weight: var(--fw-lg);
+    margin-bottom: 0px;
+    text-decoration: 2px underline var(--main);
+}
+
+.main-div .body-head h6 {
+    color: var(--text-secondary);
+    font-weight: var(--fw-md);
+    margin-bottom: 0px;
+}
+
+.avatar-progress {
+    position: relative;
+    width: 120px;
+    height: 127px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+
+.progress-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: rotate(-250deg);
+}
+
+.progress-ring__background {
+    fill: none;
+    stroke: var(--border);
+    stroke-width: 5;
+}
+
+.progress-ring__circle {
+    fill: none;
+    stroke: #38CB89;
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-dasharray: 339.292;
+    /* 2 * π * r (r = 54) */
+    stroke-dashoffset: 339.292;
+    transition: stroke-dashoffset 0.5s ease;
+}
+
+.progress-text {
+    position: absolute;
+    bottom: 10px;
+    font-weight: var(--fw-md);
+    background: var(--secondary);
+    border: 2px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    font-size: 10px;
+}
+
+.avatar-div-100 {
+    display: block;
+    margin: auto;
+}
+
+.badge-150,
+.badge-100,
+.badge-90,
+.badge-70,
+.badge-60,
+.badge-40,
+.badge-30,
+.badge-25 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.avatar-150,
+.avatar-100,
+.avatar-90,
+.avatar-70,
+.avatar-60,
+.avatar-40,
+.avatar-30,
+.avatar-25 {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-div-150,
+.avatar-150,
+.badge-150 {
+    width: 150px;
+    height: 150px;
+}
+
+.avatar-div-90,
+.avatar-90,
+.badge-90 {
+    width: 90px;
+    height: 90px;
+}
+
+.avatar-div-70,
+.avatar-70,
+.badge-70 {
+    width: 70px;
+    height: 70px;
+}
+
+.avatar-div-60,
+.avatar-60,
+.badge-60 {
+    width: 60px;
+    height: 60px;
+}
+
+.avatar-div-40,
+.avatar-40,
+.badge-40 {
+    width: 40px;
+    height: 40px;
+}
+
+.avatar-div-30,
+.avatar-30,
+.badge-30 {
+    width: 30px;
+    height: 30px;
+}
+
+.avatar-div-25,
+.avatar-25,
+.badge-25 {
+    width: 25px;
+    height: 25px;
+}
+
+@media screen and (min-width: 1140px) {
+
+    .main-div .body-head h4 {
+        font-size: 16px;
+    }
+
+    .main-div .body-head h5 {
+        font-size: 14px;
+    }
+
+    .main-div .body-head h6,
+    .dropdown .dropdown-menu li {
+        font-size: 12px;
+    }
+
+    .avatar-div-100,
+    .avatar-100,
+    .badge-100 {
+        width: 100px;
+        height: 100px;
+    }
+
+}
+
+@media screen and (min-width: 767px) and (max-width: 1140px) {
+
+    .main-div .body-head h4 {
+        font-size: 14px;
+    }
+
+    .main-div .body-head h5 {
+        font-size: 12px;
+    }
+
+    .main-div .body-head h6,
+    .dropdown .dropdown-menu li {
+        font-size: 10px;
+    }
+
+    .avatar-div-100,
+    .avatar-100,
+    .badge-100 {
+        width: 80px;
+        height: 80px;
+    }
+
+}
+
+@media screen and (max-width: 767px) {
+
+    .body-head {
+        gap: 10px;
+    }
+
+    .main-div .body-head h4 {
+        font-size: 16px;
+    }
+
+    .main-div .body-head h5 {
+        font-size: 14px;
+    }
+
+    .main-div .body-head h6,
+    .dropdown .dropdown-menu li {
+        font-size: 12px;
+    }
+
+    .avatar-div-100,
+    .avatar-100,
+    .badge-100 {
+        width: 80px;
+        height: 80px;
+    }
+
+}
