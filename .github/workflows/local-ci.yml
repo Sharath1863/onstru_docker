@@ -12,7 +12,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Restart containers
+    - name: Remove conflicting containers
+      run: |
+        docker stop laravel_app laravel_nginx laravel_mysql laravel_phpmyadmin 2>$null
+        docker rm laravel_app laravel_nginx laravel_mysql laravel_phpmyadmin 2>$null
+      shell: powershell
+      continue-on-error: true
+
+    - name: Start containers
       run: docker compose up -d
 
     - name: Wait for MySQL
