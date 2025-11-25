@@ -1,9 +1,8 @@
-# .github/workflows/deploy.yml
-name: Deploy — Instant & Silent
+name: Deploy — Fast & No Composer
 
 on:
   push:
-    branches: [main ]
+    branches: [ "main" ]
 
 jobs:
   deploy:
@@ -13,18 +12,23 @@ jobs:
         shell: powershell
 
     steps:
-      - name: Checkout code
+      - name: Checkout latest code
         uses: actions/checkout@v4
 
-      # ONE COMMAND = instant deploy, no build, no composer, no vendor spam
-      - name: Deploy instantly
-        run: docker compose up -d --no-deps --force-recreate app nginx
+      # Update code inside container project directory
+      - name: Sync code into running container (no down, no vendor install)
+        run: |
+          docker compose exec -T app powershell -Command "
+            Copy-Item -Recurse -Force C:\actions-runner\_work\onstru_docker\onstru_docker\* C:\var\www\html\
+          "
 
-      # Migrations + your favorite command
-      - name: Migrate & clear
+      - name: Restart application containers
+        run: docker compose restart app nginx
+
+      - name: Migrate & clear cache
         run: |
           docker compose exec -T app php artisan migrate --force
           docker compose exec -T app php artisan optimize:clear
 
       - name: Done
-        run: Write-Host "Deployed in 3–6 seconds — http://localhost:8000" -ForegroundColor Green
+        run: Write-Host "🚀 Deployed instantly — http://localhost:8000" -ForegroundColor Green

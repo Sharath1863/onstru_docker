@@ -1,34 +1,70 @@
-name: Deploy — Fast & No Composer
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel_app
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    networks:
+      - laravel
+    depends_on:
+      mysql:
+        condition: service_healthy   # ← NEW: wait for MySQL to be really ready
+    restart: unless-stopped        # ← NEW: auto-restart if it ever dies
 
-on:
-  push:
-    branches: [ "main" ]
+  nginx:
+    image: nginx:latest
+    container_name: laravel_nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - laravel
+    restart: unless-stopped
 
-jobs:
-  deploy:
-    runs-on: self-hosted
-    defaults:
-      run:
-        shell: powershell
+  mysql:
+    image: mysql:8.0
+    container_name: laravel_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - laravel
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
 
-    steps:
-      - name: Checkout latest code
-        uses: actions/checkout@v4
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: laravel_phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: root
+    depends_on:
+      - mysql
+    networks:
+      - laravel
 
-      # Update code inside container project directory
-      - name: Sync code into running container (no down, no vendor install)
-        run: |
-          docker compose exec -T app powershell -Command "
-            Copy-Item -Recurse -Force C:\actions-runner\_work\onstru_docker\onstru_docker\* C:\var\www\html\
-          "
+volumes:
+  mysql_data:
 
-      - name: Restart application containers
-        run: docker compose restart app nginx
-
-      - name: Migrate & clear cache
-        run: |
-          docker compose exec -T app php artisan migrate --force
-          docker compose exec -T app php artisan optimize:clear
-
-      - name: Done
-        run: Write-Host "🚀 Deployed instantly — http://localhost:8000" -ForegroundColor Green
+networks:
+  laravel:
+    driver: bridge
