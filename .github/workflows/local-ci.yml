@@ -1,47 +1,42 @@
-name: CI/CD for MAIN
+name: Deploy Main (PowerShell + Local)
 
 on:
   push:
-    branches: ["main"]
+    branches: [ main ]
 
 jobs:
   deploy:
     runs-on: self-hosted
+    defaults:
+      run:
+        shell: powershell
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Start containers (build if needed)
-      run: docker compose up -d --build
+      - name: Rebuild & restart only the app container
+        run: docker compose up -d --build --force-recreate --no-deps app
 
-    - name: Wait for MySQL to be ready
-      shell: powershell
-      run: |
-        Write-Host "Waiting for MySQL..."
-        $max = 30
-        for ($i = 0; $i -lt $max; $i++) {
-          $ok = docker compose exec -T mysql mysqladmin ping -h localhost --silent
-          if ($ok) { Write-Host "MySQL is ready"; break }
-          Start-Sleep -Seconds 2
-        }
+      - name: Wait for MySQL (max 60 seconds)
+        run: |
+          Write-Host "Waiting for MySQL to be ready..."
+          $attempts = 0
+          while ($attempts -lt 30) {
+            if (docker compose exec -T mysql mysqladmin ping -h127.0.0.1 --silent) {
+              Write-Host "MySQL is ready!"
+              break
+            }
+            Start-Sleep -Seconds 2
+            $attempts++
+          }
+          if ($attempts -ge 30) { Write-Error "MySQL timeout!" ; exit 1 }
 
-    - name: Install dependencies only if vendor missing
-      run: |
-        docker compose exec -T app sh -c 'if [ ! -d vendor ]; then echo "Vendor missing - running composer install"; composer install --no-interaction --prefer-dist; else echo "Vendor exists - skipped"; fi'
+      - name: Run migrations
+        run: docker compose exec -T app php artisan migrate --force
 
-    - name: Run DB migrations
-      run: docker compose exec -T app php artisan migrate --force || exit 0
+      - name: Clear & optimize (exactly what you asked for)
+        run: docker compose exec -T app php artisan optimize:clear
 
-    - name: Generate APP_KEY (safe)
-      run: docker compose exec -T app php artisan key:generate || exit 0
-
-    - name: Clear & optimize
-      run: docker compose exec -T app php artisan optimize:clear
-
-    - name: Restart application container
-      run: docker compose restart app
-
-    - name: Deployment completed
-      shell: powershell
-      run: Write-Host "🚀 Deployment complete — http://localhost:8000"
+      - name: Done
+        run: Write-Host "Deployed successfully! http://localhost:8000" -ForegroundColor Green
