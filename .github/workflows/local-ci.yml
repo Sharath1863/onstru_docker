@@ -18,19 +18,22 @@ jobs:
         docker rm -f laravel_app laravel_nginx laravel_mysql laravel_phpmyadmin
       continue-on-error: true
 
-    - name: Build containers
-      run: docker compose up -d --build
-
-    - name: Wait for containers
-      run: Start-Sleep -Seconds 20
+    - name: Create .env file
+      run: |
+        if (!(Test-Path .env)) {
+          Copy-Item .env.example .env
+        }
       shell: powershell
 
-    - name: Install composer packages
-      run: docker compose exec -T app composer install --no-interaction --prefer-dist
+    - name: Build and start containers
+      run: docker compose up -d --build
 
-    - name: Copy environment file
-      run: docker compose exec -T app cp .env.example .env
-      continue-on-error: true
+    - name: Wait for MySQL
+      run: Start-Sleep -Seconds 25
+      shell: powershell
+
+    - name: Install composer dependencies
+      run: docker compose exec -T app composer install --no-interaction --prefer-dist --working-dir=/var/www/html
 
     - name: Generate app key
       run: docker compose exec -T app php artisan key:generate --force
@@ -38,12 +41,14 @@ jobs:
     - name: Run migrations
       run: docker compose exec -T app php artisan migrate --force
 
-    - name: Cache config
-      run: docker compose exec -T app php artisan config:cache
+    - name: Clear and cache config
+      run: |
+        docker compose exec -T app php artisan config:clear
+        docker compose exec -T app php artisan cache:clear
 
-    - name: Show running containers
+    - name: Show containers
       run: docker compose ps
 
     - name: Success
-      run: Write-Host " Done! Visit http://localhost:8000"
+      run: Write-Host "Deployment complete! Visit http://localhost:8000"
       shell: powershell
