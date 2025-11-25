@@ -1,5 +1,5 @@
 <?php
-12345
+
 namespace App\Console;
 
 use App\Jobs\ExpireBadges;
