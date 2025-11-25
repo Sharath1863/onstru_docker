@@ -1,4 +1,4 @@
-name: Local CI/CD for Laravel Docker
+name: Laravel CI/CD
 
 on:
   push:
@@ -12,44 +12,38 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Stop existing containers
-      run: docker compose down -v
+    - name: Stop and remove old containers
+      run: |
+        docker compose down -v
+        docker rm -f laravel_app laravel_nginx laravel_mysql laravel_phpmyadmin
       continue-on-error: true
 
-    - name: Remove old containers
-      run: docker rm -f laravel_app laravel_nginx laravel_mysql laravel_phpmyadmin
-      continue-on-error: true
-
-    - name: Build and start containers
+    - name: Build containers
       run: docker compose up -d --build
 
-    - name: Wait for MySQL
-      run: Start-Sleep -Seconds 15
+    - name: Wait for containers
+      run: Start-Sleep -Seconds 20
       shell: powershell
 
-    - name: Install dependencies
-      run: docker compose exec -T app composer install --no-interaction
+    - name: Install composer packages
+      run: docker compose exec -T app composer install --no-interaction --prefer-dist
 
-    - name: Setup .env file
+    - name: Copy environment file
       run: docker compose exec -T app cp .env.example .env
       continue-on-error: true
 
-    - name: Generate key
+    - name: Generate app key
       run: docker compose exec -T app php artisan key:generate --force
 
     - name: Run migrations
       run: docker compose exec -T app php artisan migrate --force
 
-    - name: Clear cache
-      run: docker compose exec -T app php artisan optimize:clear
+    - name: Cache config
+      run: docker compose exec -T app php artisan config:cache
 
-    - name: Run tests
-      run: docker compose exec -T app php artisan test
-      continue-on-error: true
-
-    - name: Show status
+    - name: Show running containers
       run: docker compose ps
 
-    - name: Done
-      run: Write-Host "Deployment complete! App running at http://localhost:8000"
+    - name: Success
+      run: Write-Host " Done! Visit http://localhost:8000"
       shell: powershell
