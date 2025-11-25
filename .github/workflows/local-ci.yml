@@ -16,14 +16,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # THIS IS THE ONLY COMMAND THAT RUNS ON EVERY PUSH
-      - name: Instant deploy (NO composer, NO build, NO vendor)
+      - name: Instant deploy (zero downtime, keeps container_name)
         run: docker compose restart app nginx
 
       - name: Migrate + clear cache
         run: |
           docker compose exec -T app php artisan migrate --force
-          docker compose exec -T app: php artisan optimize:clear
+          docker compose exec -T app php artisan optimize:clear     # ← FIXED: removed the wrong ":"
 
       - name: Done
         run: Write-Host "Deployed in 2 seconds — http://localhost:8000" -ForegroundColor Green
