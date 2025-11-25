@@ -15,20 +15,20 @@ jobs:
       - name: Checkout latest code
         uses: actions/checkout@v4
 
-      # Update code inside container project directory
-      - name: Sync code into running container (no down, no vendor install)
+      # Start containers without rebuild
+      - name: Start containers (no rebuild)
+        run: docker compose up -d --no-build
+
+      # Sync code from host into container (Linux cp command inside app container)
+      - name: Sync application code into container
         run: |
-          docker compose exec -T app powershell -Command "
-            Copy-Item -Recurse -Force C:\actions-runner\_work\onstru_docker\onstru_docker\* C:\var\www\html\
-          "
+          docker compose exec -T app sh -c "cp -r /var/www/html/. /var/www/html"
 
-      - name: Restart application containers
-        run: docker compose restart app nginx
-
-      - name: Migrate & clear cache
+      # Apply migrations & cache clear
+      - name: Migrate & clear
         run: |
           docker compose exec -T app php artisan migrate --force
           docker compose exec -T app php artisan optimize:clear
 
-      - name: Done
-        run: Write-Host "🚀 Deployed instantly — http://localhost:8000" -ForegroundColor Green
+      - name: Deployment done
+        run: Write-Host "🚀 Deployment completed — http://localhost:8000" -ForegroundColor Green
