@@ -2,7 +2,7 @@ name: Local CI/CD for Laravel Docker
 
 on:
   push:
-    branches: ["dev"]
+    branches: ["main"]
   workflow_dispatch: # Allows manual trigger from GitHub UI
 
 jobs:
