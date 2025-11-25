@@ -44,7 +44,7 @@ jobs:
       run: docker compose exec -T app php artisan migrate --force
 
     - name: Clear cache
-      run: docker compose exec -T app php artisan cache:clear
+      run: docker compose exec -T app php artisan optimize:clear
 
     - name: Done
       run: Write-Host " Deployed! http://localhost:8000"
