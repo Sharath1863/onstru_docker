@@ -22,22 +22,23 @@ jobs:
         }
       shell: powershell
 
-    - name: Start containers
+    - name: Start containers (if not running)
       run: docker compose up -d
+      continue-on-error: true
 
     - name: Install dependencies (first time only)
       if: steps.check_vendor.outputs.exists == 'false'
       run: |
-        Write-Host "Installing composer dependencies..."
         Start-Sleep -Seconds 15
-        docker compose exec -T app composer install --no-interaction --prefer-dist
+        docker compose exec -T app composer install --no-interaction --no-scripts --prefer-dist
+        docker compose exec -T app composer dump-autoload
       shell: powershell
       timeout-minutes: 15
 
-    - name: Restart containers to pick up new code
+    - name: Restart app
       run: docker compose restart app nginx
 
-    - name: Wait for app to restart
+    - name: Wait
       run: Start-Sleep -Seconds 5
       shell: powershell
 
@@ -47,12 +48,6 @@ jobs:
     - name: Clear cache
       run: docker compose exec -T app php artisan cache:clear
 
-    - name: Show deployment info
-      run: |
-        Write-Host "================================"
-        Write-Host " Deployment Successful!"
-        Write-Host "================================"
-        Write-Host " Working directory: $PWD"
-        Write-Host " Application URL: http://localhost:8000"
-        Write-Host "================================"
+    - name: Done
+      run: Write-Host "✅ Deployed! http://localhost:8000"
       shell: powershell
