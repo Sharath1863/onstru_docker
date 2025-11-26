@@ -19,7 +19,8 @@ jobs:
         docker-compose up -d
     
     - name: Wait for services
-      run: timeout 20
+      run: Start-Sleep -Seconds 20
+      shell: powershell
     
     - name: Run migrations
       run: docker-compose exec -T app php artisan migrate --force
@@ -31,4 +32,4 @@ jobs:
       run: docker-compose ps
     
     - name: Deployment complete
-      run: echo "✅ Deployed successfully at http://localhost:8000"
+      run: echo " Deployed successfully at http://localhost:8000"
