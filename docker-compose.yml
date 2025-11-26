@@ -1,61 +1,33 @@
-services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: laravel_app
-    volumes:
-      - ./:/var/www/html
-      - /var/www/html/vendor 
-    networks:
-      - laravel
-    depends_on:
-      - mysql
+name: Laravel CI/CD - Simple
 
-  nginx:
-    image: nginx:alpine
-    container_name: laravel_nginx
-    ports:
-      - "8000:80"
-    volumes:
-      - ./:/var/www/html
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-      - app
-    networks:
-      - laravel
+on:
+  push:
+    branches: ["main"]
 
-  mysql:
-    image: mysql:8.0
-    container_name: laravel_mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: laravel
-      MYSQL_USER: laravel
-      MYSQL_PASSWORD: secret
-    ports:
-      - "3308:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - laravel
+jobs:
+  deploy:
+    runs-on: self-hosted
+    defaults:
+      run:
+        working-directory: C:\Users\chand\Downloads\Onstru_version_web
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: laravel_phpmyadmin
-    ports:
-      - "8081:80"
-    environment:
-      PMA_HOST: mysql
-      PMA_USER: root
-      PMA_PASSWORD: root
-    depends_on:
-      - mysql
-    networks:
-      - laravel
+    steps:
+      - name: Pull latest code
+        run: git pull origin main
+        shell: powershell
 
-volumes:
-  mysql_data:
+      - name: Restart containers
+        run: docker compose restart app nginx
+        shell: powershell
 
-networks:
-  laravel:
+      - name: Run migrations
+        run: docker compose exec -T app php artisan migrate --force
+        shell: powershell
+
+      - name: Clear cache
+        run: docker compose exec -T app php artisan cache:clear
+        shell: powershell
+
+      - name: Done
+        run: Write-Host "✅ Deployed! http://localhost:8000" -ForegroundColor Green
+        shell: powershell
