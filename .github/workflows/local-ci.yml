@@ -7,38 +7,40 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy My Laravel App
+      - name: Deploy Laravel
         shell: powershell
         run: |
-          # 1. Get latest code
+          Write-Host "=== Pulling latest code ===" -ForegroundColor Cyan
           git pull origin main
 
-          # 2. Stop & remove old containers (silently)
-          docker compose down --remove-orphans 2>$null
+          Write-Host "=== Stopping old containers ===" -ForegroundColor Yellow
+          docker compose down --remove-orphans
 
-          # 3. Build image only if it doesn't exist
+          Write-Host "=== Checking if Docker image exists ===" -ForegroundColor Cyan
           docker image inspect onstru_docker-app:latest >$null 2>&1
           if ($LASTEXITCODE -ne 0) {
-            Write-Host "Building Docker image (first time)..."
+            Write-Host "Image not found → building..." -ForegroundColor Magenta
             docker compose build app
           } else {
-            Write-Host "Image already exists – skipping build"
+            Write-Host "Image found → skipping build (fast!)" -ForegroundColor Green
           }
 
-          # 4. Start everything fresh
+          Write-Host "=== Starting containers ===" -ForegroundColor Cyan
           docker compose up -d
 
-          # 5. Wait a moment
+          Write-Host "=== Waiting 15 seconds for MySQL ===" -ForegroundColor Yellow
           Start-Sleep -Seconds 15
 
-          # 6. Run Laravel commands
+          Write-Host "=== Running migrations ===" -ForegroundColor Cyan
           docker compose exec -T app php artisan migrate --force
+
+          Write-Host "=== Clearing cache ===" -ForegroundColor Cyan
           docker compose exec -T app php artisan optimize:clear
 
-          # Done!
-          Write-Host "All done! Visit http://localhost:8000"
+          Write-Host "DEPLOY SUCCESSFUL!" -ForegroundColor Green
+          Write-Host "Site: http://localhost:8000" -ForegroundColor White
+          Write-Host "phpMyAdmin: http://localhost:8081" -ForegroundColor White
