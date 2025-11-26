@@ -13,15 +13,16 @@ jobs:
     
     - name: Deploy
       run: |
-        docker-compose down
+        docker rm -f laravel_mysql laravel_app laravel_nginx laravel_phpmyadmin 2>$null
         $imageExists = docker images -q onstru_docker-app:latest
         if (-not $imageExists) {
           docker-compose build
         }
         docker-compose up -d
         Start-Sleep -Seconds 10
+        docker-compose exec -T app php artisan migrate --force
         docker-compose exec -T app php artisan optimize:clear
       shell: powershell
     
     - name: Done
-      run: echo "Deployed successfully"
+      run: echo "Deployed successfully at http://localhost:8000"
