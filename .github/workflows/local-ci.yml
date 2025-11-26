@@ -10,28 +10,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy
-        shell: python
+      - name: Deploy Laravel
+        shell: powershell
         run: |
-          from subprocess import run
-          from time import sleep
+          Write-Host "Deploying Laravel..." -ForegroundColor Cyan
 
-          print("Deploying Laravel...")
-
-          run("git pull origin main")
-          run("docker compose down --remove-orphans")
+          git pull origin main
+          docker compose down --remove-orphans
 
           # Build only if image is missing
-          if "missing" in run(
-              "docker image inspect onstru_docker-app:latest >nul 2>&1 || echo missing",
-              shell=True, capture_output=True, text=True
-          ).stdout:
-              run("docker compose build --no-cache app")
+          if (-not (docker images -q onstru_docker-app:latest)) {
+            Write-Host "Building image (first time)..." -ForegroundColor Yellow
+            docker compose build --no-cache app
+          }
 
-          run("docker compose up -d")
-          sleep(15)
+          docker compose up -d
+          Start-Sleep -Seconds 15
 
-          run("docker compose exec -T app php artisan migrate --force")
-          run("docker compose exec -T app php artisan optimize:clear")
+          docker compose exec -T app php artisan migrate --force
+          docker compose exec -T app php artisan optimize:clear
 
-          print("Done! Site → http://localhost:8000")
+          Write-Host "Done! Site → http://localhost:8000" -ForegroundColor Green
