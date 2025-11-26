@@ -7,25 +7,30 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
-    defaults:
-      run:
-        working-directory: C:\Users\chand\Downloads\Onstru_version_web
 
     steps:
       - name: Pull latest code
-        run: git pull origin main
+        run: |
+          cd "C:\Users\chand\Downloads\Onstru_version_web"
+          git pull origin main
         shell: powershell
 
       - name: Restart containers
-        run: docker compose restart app nginx
+        run: |
+          cd "C:\Users\chand\Downloads\Onstru_version_web"
+          docker compose restart app nginx
         shell: powershell
 
       - name: Run migrations
-        run: docker compose exec -T app php artisan migrate --force
+        run: |
+          cd "C:\Users\chand\Downloads\Onstru_version_web"
+          docker compose exec -T app php artisan migrate --force
         shell: powershell
 
       - name: Clear cache
-        run: docker compose exec -T app php artisan cache:clear
+        run: |
+          cd "C:\Users\chand\Downloads\Onstru_version_web"
+          docker compose exec -T app php artisan cache:clear
         shell: powershell
 
       - name: Done
