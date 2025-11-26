@@ -19,14 +19,16 @@ RUN apt-get update && apt-get install -y \
 # Install PHP extensions
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr.bin/composer
+# Install Composer (FIXED THE TYPO!)
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Copy project files with correct ownership
 COPY --chown=www-data:www-data . /var/www/html
 
-# ←←← THIS IS THE KEY PART THAT WAS WRONG BEFORE ←←←
-# storage and bootstrap/cache need 775 (or 777 in dev) and must be owned by www-data
+# Install composer dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Set permissions
 RUN chmod -R 775 /var/www/html/storage \
     && chmod -R 775 /var/www/html/bootstrap/cache \
     && chown -R www-data:www-data /var/www/html/storage \
