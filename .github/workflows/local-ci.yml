@@ -14,13 +14,14 @@ jobs:
     - name: Check if rebuild needed
       id: check
       run: |
-        $files = git diff --name-only HEAD~1 HEAD
-        if ($files -match "Dockerfile|composer.json|composer.lock") {
-          echo "rebuild=true" >> $env:GITHUB_OUTPUT
-        } else {
-          echo "rebuild=false" >> $env:GITHUB_OUTPUT
+        $rebuild = "false"
+        if (Test-Path "Dockerfile") {
+          $dockerChanged = git diff --name-only ${{ github.event.before }} ${{ github.sha }} | Select-String -Pattern "Dockerfile|composer.json|composer.lock"
+          if ($dockerChanged) { $rebuild = "true" }
         }
+        echo "rebuild=$rebuild" >> $env:GITHUB_OUTPUT
       shell: powershell
+      continue-on-error: true
     
     - name: Deploy
       run: |
