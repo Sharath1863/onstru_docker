@@ -14,34 +14,37 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Instant Deploy (no rebuild · minimal commands)
+      - name: Instant Deploy (Windows + PowerShell)
+        shell: powershell
         run: |
-          # Pull latest code
+          # 1. Pull latest code
           git pull origin main
 
-          # Remove old containers
-          docker rm -f laravel_mysql laravel_app laravel_nginx laravel_phpmyadmin 2>/dev/null || true
+          # 2. Remove old containers (ignore errors if not exist)
+          docker rm -f laravel_mysql laravel_app laravel_nginx laravel_phpmyadmin 2>$null
 
-          # Build image only if it doesn't exist yet
-          if ! docker image inspect onstru_docker-app:latest >/dev/null 2>&1; then
-            echo "Building image (first time or after cleanup)..."
+          # 3. Build image only if it doesn't exist yet
+          $image = docker images -q onstru_docker-app:latest
+          if (-not $image) {
+            Write-Host "Image not found → building..."
             docker compose build --no-cache app
-          else
-            echo "Image exists → skipping build (instant deploy!)"
-          fi
+          } else {
+            Write-Host "Image exists → skipping build (instant!)"
+          }
 
-          # Start everything
+          # 4. Start containers
           docker compose up -d
 
-          # Wait for MySQL + PHP to be ready
-          sleep 12
+          # 5. Wait for MySQL & app to be ready
+          Start-Sleep -Seconds 12
 
-          # Only the 2 commands you actually want
+          # 6. Your exact commands
           docker compose exec -T app php artisan migrate --force
           docker compose exec -T app php artisan optimize:clear
 
       - name: Done
+        shell: powershell
         run: |
-          echo "Deployed in seconds!"
-          echo "Site: http://localhost:8000"
-          echo "phpMyAdmin: http://localhost:8081"
+          Write-Host "Deployed successfully!"
+          Write-Host "Site: http://localhost:8000"
+          Write-Host "phpMyAdmin: http://localhost:8081"
