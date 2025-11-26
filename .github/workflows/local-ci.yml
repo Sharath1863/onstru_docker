@@ -16,7 +16,7 @@ jobs:
     - name: Deploy
       run: |
         docker rm -f laravel_mysql laravel_app laravel_nginx laravel_phpmyadmin 2>$null
-        docker-compose up -d
+        docker-compose up -d --no-build
     
     - name: Wait for services
       run: Start-Sleep -Seconds 20
@@ -32,4 +32,4 @@ jobs:
       run: docker-compose ps
     
     - name: Deployment complete
-      run: echo "✅ Deployed successfully at http://localhost:8000"
+      run: echo " Deployed successfully at http://localhost:8000"
