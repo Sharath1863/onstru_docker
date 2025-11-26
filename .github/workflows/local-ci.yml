@@ -13,15 +13,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     
-    - name: Stop existing containers
-      run: docker-compose down
-      continue-on-error: true
-    
-    - name: Pull latest images
-      run: docker-compose pull
-    
-    - name: Start containers (no rebuild)
-      run: docker-compose up -d
+    - name: Deploy
+      run: docker-compose up -d --force-recreate
     
     - name: Wait for services
       run: timeout 20
