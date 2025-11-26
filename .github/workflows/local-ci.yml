@@ -1,42 +1,39 @@
-name: Laravel CI/CD - Simple
+name: Deploy Laravel App
 
 on:
   push:
-    branches: ["main"]
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: self-hosted
-
+    
     steps:
-      - name: Mark repo as safe
-        run: git config --global --add safe.directory "C:/Users/chand/Downloads/Onstru_version_web"
-        shell: powershell
-
-      - name: Pull latest code
-        run: |
-          cd "C:\Users\chand\Downloads\Onstru_version_web"
-          git pull origin main
-        shell: cmd
-
-      - name: Restart containers
-        run: |
-          cd "C:\Users\chand\Downloads\Onstru_version_web"
-          docker compose restart app nginx
-        shell: powershell
-
-      - name: Run migrations
-        run: |
-          cd "C:\Users\chand\Downloads\Onstru_version_web"
-          docker compose exec -T app php artisan migrate --force
-        shell: powershell
-
-      - name: Clear cache
-        run: |
-          cd "C:\Users\chand\Downloads\Onstru_version_web"
-          docker compose exec -T app php artisan optimize:clear
-        shell: powershell
-
-      - name: Done
-        run: Write-Host "✅ Deployed! http://localhost:8000" -ForegroundColor Green
-        shell: powershell
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Stop existing containers
+      run: docker-compose down
+      continue-on-error: true
+    
+    - name: Pull latest images
+      run: docker-compose pull
+    
+    - name: Start containers (no rebuild)
+      run: docker-compose up -d
+    
+    - name: Wait for services
+      run: timeout 20
+    
+    - name: Run migrations
+      run: docker-compose exec -T app php artisan migrate --force
+    
+    - name: Optimize application
+      run: docker-compose exec -T app php artisan optimize:clear
+    
+    - name: Check container status
+      run: docker-compose ps
+    
+    - name: Deployment complete
+      run: echo "✅ Deployed successfully at http://localhost:8000"
