@@ -8,39 +8,30 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Deploy Laravel
-        shell: powershell
+      - name: Deploy
+        shell: python
         run: |
-          Write-Host "=== Pulling latest code ===" -ForegroundColor Cyan
-          git pull origin main
+          from subprocess import run
+          from time import sleep
 
-          Write-Host "=== Stopping old containers ===" -ForegroundColor Yellow
-          docker compose down --remove-orphans
+          print("Deploying Laravel...")
 
-          Write-Host "=== Checking if Docker image exists ===" -ForegroundColor Cyan
-          docker image inspect onstru_docker-app:latest >$null 2>&1
-          if ($LASTEXITCODE -ne 0) {
-            Write-Host "Image not found → building..." -ForegroundColor Magenta
-            docker compose build app
-          } else {
-            Write-Host "Image found → skipping build (fast!)" -ForegroundColor Green
-          }
+          run("git pull origin main")
+          run("docker compose down --remove-orphans")
 
-          Write-Host "=== Starting containers ===" -ForegroundColor Cyan
-          docker compose up -d
+          # Build only if image is missing
+          if "missing" in run(
+              "docker image inspect onstru_docker-app:latest >nul 2>&1 || echo missing",
+              shell=True, capture_output=True, text=True
+          ).stdout:
+              run("docker compose build --no-cache app")
 
-          Write-Host "=== Waiting 15 seconds for MySQL ===" -ForegroundColor Yellow
-          Start-Sleep -Seconds 15
+          run("docker compose up -d")
+          sleep(15)
 
-          Write-Host "=== Running migrations ===" -ForegroundColor Cyan
-          docker compose exec -T app php artisan migrate --force
+          run("docker compose exec -T app php artisan migrate --force")
+          run("docker compose exec -T app php artisan optimize:clear")
 
-          Write-Host "=== Clearing cache ===" -ForegroundColor Cyan
-          docker compose exec -T app php artisan optimize:clear
-
-          Write-Host "DEPLOY SUCCESSFUL!" -ForegroundColor Green
-          Write-Host "Site: http://localhost:8000" -ForegroundColor White
-          Write-Host "phpMyAdmin: http://localhost:8081" -ForegroundColor White
+          print("Done! Site → http://localhost:8000")
