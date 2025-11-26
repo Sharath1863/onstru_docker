@@ -1,39 +1,40 @@
-name: Deploy Laravel App
+name: Deploy
 
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: self-hosted
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
+    
+    - name: Check if rebuild needed
+      id: check
+      run: |
+        $files = git diff --name-only HEAD~1 HEAD
+        if ($files -match "Dockerfile|composer.json|composer.lock") {
+          echo "rebuild=true" >> $env:GITHUB_OUTPUT
+        } else {
+          echo "rebuild=false" >> $env:GITHUB_OUTPUT
+        }
+      shell: powershell
     
     - name: Deploy
       run: |
-        docker rm -f laravel_mysql laravel_app laravel_nginx laravel_phpmyadmin 2>$null
-        if (-not (docker images -q onstru_docker-app:latest)) {
-          docker-compose build
+        docker-compose down
+        if ("${{ steps.check.outputs.rebuild }}" -eq "true") {
+          Write-Host "🔨 Rebuilding image..."
+          docker-compose up -d --build
+        } else {
+          Write-Host "⚡ Fast deploy (no rebuild)..."
+          docker-compose up -d --no-build
         }
-        docker-compose up -d
+        Start-Sleep -Seconds 10
+        docker-compose exec -T app php artisan optimize:clear
       shell: powershell
     
-    - name: Wait for services
-      run: Start-Sleep -Seconds 20
-      shell: powershell
-    
-    - name: Run migrations
-      run: docker-compose exec -T app php artisan migrate --force
-    
-    - name: Optimize application
-      run: docker-compose exec -T app php artisan optimize:clear
-    
-    - name: Check container status
-      run: docker-compose ps
-    
-    - name: Deployment complete
-      run: echo "✅ Deployed successfully at http://localhost:8000"
+    - name: Done
+      run: echo "✅ Deployed at http://localhost:8000"
