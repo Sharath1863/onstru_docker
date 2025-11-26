@@ -1,3 +1,4 @@
+# .github/workflows/deploy.yml
 name: Deploy
 
 on:
@@ -7,22 +8,40 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
-    
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Deploy
-      run: |
-        docker rm -f laravel_mysql laravel_app laravel_nginx laravel_phpmyadmin 2>$null
-        $imageExists = docker images -q onstru_docker-app:latest
-        if (-not $imageExists) {
-          docker-compose build
-        }
-        docker-compose up -d
-        Start-Sleep -Seconds 10
-        docker-compose exec -T app php artisan migrate --force
-        docker-compose exec -T app php artisan optimize:clear
-      shell: powershell
-    
-    - name: Done
-      run: echo "Deployed successfully at http://localhost:8000"
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Instant Deploy (no rebuild · minimal commands)
+        run: |
+          # Pull latest code
+          git pull origin main
+
+          # Remove old containers
+          docker rm -f laravel_mysql laravel_app laravel_nginx laravel_phpmyadmin 2>/dev/null || true
+
+          # Build image only if it doesn't exist yet
+          if ! docker image inspect onstru_docker-app:latest >/dev/null 2>&1; then
+            echo "Building image (first time or after cleanup)..."
+            docker compose build --no-cache app
+          else
+            echo "Image exists → skipping build (instant deploy!)"
+          fi
+
+          # Start everything
+          docker compose up -d
+
+          # Wait for MySQL + PHP to be ready
+          sleep 12
+
+          # Only the 2 commands you actually want
+          docker compose exec -T app php artisan migrate --force
+          docker compose exec -T app php artisan optimize:clear
+
+      - name: Done
+        run: |
+          echo "Deployed in seconds!"
+          echo "Site: http://localhost:8000"
+          echo "phpMyAdmin: http://localhost:8081"
