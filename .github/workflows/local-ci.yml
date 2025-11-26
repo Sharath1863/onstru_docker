@@ -14,6 +14,10 @@ jobs:
     - name: Deploy
       run: |
         docker-compose down
+        $imageExists = docker images -q onstru_docker-app:latest
+        if (-not $imageExists) {
+          docker-compose build
+        }
         docker-compose up -d
         Start-Sleep -Seconds 10
         docker-compose exec -T app php artisan optimize:clear
