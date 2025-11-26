@@ -34,7 +34,7 @@ jobs:
       - name: Clear cache
         run: |
           cd "C:\Users\chand\Downloads\Onstru_version_web"
-          docker compose exec -T app php artisan cache:clear
+          docker compose exec -T app php artisan optimize:clear
         shell: powershell
 
       - name: Done
