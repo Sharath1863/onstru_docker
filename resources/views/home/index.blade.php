@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container">
-    <h1>Welcome Home!</h1>
+    <h1>Welcome back!</h1>
     <p>This is updated via CI/CD!</p>
 </div>
 
