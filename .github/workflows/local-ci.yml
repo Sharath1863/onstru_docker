@@ -27,10 +27,10 @@ jobs:
       run: |
         docker-compose down
         if ("${{ steps.check.outputs.rebuild }}" -eq "true") {
-          Write-Host "🔨 Rebuilding image..."
+          Write-Host "Rebuilding image..."
           docker-compose up -d --build
         } else {
-          Write-Host "⚡ Fast deploy (no rebuild)..."
+          Write-Host "Fast deploy (no rebuild)..."
           docker-compose up -d --no-build
         }
         Start-Sleep -Seconds 10
