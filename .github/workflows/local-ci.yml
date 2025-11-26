@@ -1,6 +1,5 @@
 # .github/workflows/deploy.yml
 name: Deploy
-
 on:
   push:
     branches: [ main ]
@@ -10,41 +9,36 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Instant Deploy (Windows + PowerShell)
+      - name: Deploy My Laravel App
         shell: powershell
         run: |
-          # 1. Pull latest code
+          # 1. Get latest code
           git pull origin main
 
-          # 2. Remove old containers (ignore errors if not exist)
-          docker rm -f laravel_mysql laravel_app laravel_nginx laravel_phpmyadmin 2>$null
+          # 2. Stop & remove old containers (silently)
+          docker compose down --remove-orphans 2>$null
 
-          # 3. Build image only if it doesn't exist yet
-          $image = docker images -q onstru_docker-app:latest
-          if (-not $image) {
-            Write-Host "Image not found → building..."
-            docker compose build --no-cache app
+          # 3. Build image only if it doesn't exist
+          docker image inspect onstru_docker-app:latest >$null 2>&1
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "Building Docker image (first time)..."
+            docker compose build app
           } else {
-            Write-Host "Image exists → skipping build (instant!)"
+            Write-Host "Image already exists – skipping build"
           }
 
-          # 4. Start containers
+          # 4. Start everything fresh
           docker compose up -d
 
-          # 5. Wait for MySQL & app to be ready
-          Start-Sleep -Seconds 12
+          # 5. Wait a moment
+          Start-Sleep -Seconds 15
 
-          # 6. Your exact commands
+          # 6. Run Laravel commands
           docker compose exec -T app php artisan migrate --force
           docker compose exec -T app php artisan optimize:clear
 
-      - name: Done
-        shell: powershell
-        run: |
-          Write-Host "Deployed successfully!"
-          Write-Host "Site: http://localhost:8000"
-          Write-Host "phpMyAdmin: http://localhost:8081"
+          # Done!
+          Write-Host "All done! Visit http://localhost:8000"
