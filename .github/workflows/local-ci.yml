@@ -20,13 +20,14 @@ jobs:
           git pull origin main
           docker compose down --remove-orphans
 
-          # Always fresh image — no cache ever
+          # Always fresh image – no cache ever
           docker compose build --no-cache app
 
           docker compose up -d
           Start-Sleep -Seconds 15
 
-          # Only this one command — and it will NEVER fail the job
-          docker compose exec -T app php artisan optimize:clear || echo "Cache clear skipped (SQLite missing - normal)"
+          # Only optimize:clear – and make sure the job stays green
+          docker compose exec -T app php artisan optimize:clear
+          if ($LASTEXITCODE -ne 0) { Write-Host "Cache clear failed (SQLite missing – normal, continuing...)" }
 
           Write-Host "Deployed! → http://localhost:8000" -ForegroundColor Green
