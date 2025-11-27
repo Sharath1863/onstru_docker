@@ -8,21 +8,26 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
-    defaults:
-      run:
-        shell: powershell
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Instant Deploy (2 seconds, zero downtime)
+      - name: Deploy Laravel
+        shell: powershell
         run: |
           Write-Host "Deploying latest code..." -ForegroundColor Cyan
-          
-          # Just restart PHP + Nginx → your new code is live instantly
-          docker compose restart app nginx
-          
-          # Optional: clear cache (migrate is commented out as you wanted)
+
+          # Fresh code + full container restart (safe & simple)
+          git pull origin main
+          docker compose down --remove-orphans
+          docker compose up -d --build-d
+
+          # Small wait only for MySQL to wake up (15s is fine)
+          Start-Sleep -Seconds 15
+
+          # Optional: uncomment when you need migrations
+          # docker compose exec -T app php artisan migrate --force
+
           docker compose exec -T app php artisan optimize:clear
-          
-          Write-Host "Deployed! → http://localhost:8000" -ForegroundColor Green
+
+          Write-Host "Deployed! → http://localhost:8000" -ForegroundColor Greenchnages
