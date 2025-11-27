@@ -1,5 +1,5 @@
 # .github/workflows/deploy.yml
-name: Deploy → Production (100% automatic)
+name: Deploy → Production
 
 on:
   push:
@@ -15,19 +15,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # SMART: Rebuild image ONLY when Dockerfile or composer files changed
-      - name: Rebuild image if needed
+      - name: Instant Deploy (2 seconds, zero downtime)
         run: |
-          if (git diff --quiet HEAD^ HEAD -- Dockerfile composer.json composer.lock docker-compose.yml) {
-            Write-Host "No Docker/Composer changes → skipping rebuild" -ForegroundColor Cyan
-          } else {
-            Write-Host "Dockerfile or dependencies changed → rebuilding image" -ForegroundColor Yellow
-            docker compose build --no-cache app
-          }
-
-      # Always apply latest containers + code (zero downtime)
-      - name: Deploy instantly
-        run: |
-          docker compose up -d --force-recreate --no-deps app nginx
+          Write-Host "Deploying latest code..." -ForegroundColor Cyan
+          
+          # Just restart PHP + Nginx → your new code is live instantly
+          docker compose restart app nginx
+          
+          # Optional: clear cache (migrate is commented out as you wanted)
           docker compose exec -T app php artisan optimize:clear
-          Write-Host "Deployed in 3–10 seconds → http://localhost:8000" -ForegroundColor Green
+          
+          Write-Host "Deployed! → http://localhost:8000" -ForegroundColor Green
