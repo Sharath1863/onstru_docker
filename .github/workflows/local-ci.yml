@@ -17,12 +17,13 @@ jobs:
         run: |
           Write-Host "Deploying latest code..." -ForegroundColor Cyan
 
-          # Fresh code + full container restart (safe & simple)
           git pull origin main
           docker compose down --remove-orphans
-          docker compose up -d --build-d
 
-          # Small wait only for MySQL to wake up (15s is fine)
+          # Build + start in one command (correct flag!)
+          docker compose up -d --build
+
+          # Wait for MySQL to be ready
           Start-Sleep -Seconds 15
 
           # Optional: uncomment when you need migrations
@@ -30,4 +31,4 @@ jobs:
 
           docker compose exec -T app php artisan optimize:clear
 
-          Write-Host "Deployed! → http://localhost:8000" -ForegroundColor Greenchnages
+          Write-Host "Deployed! → http://localhost:8000" -ForegroundColor Green
