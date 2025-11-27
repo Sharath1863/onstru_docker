@@ -1,6 +1,5 @@
 # .github/workflows/deploy.yml
-name: Deploy → Production
-
+name: Deploy
 on:
   push:
     branches: [ main ]
@@ -8,26 +7,37 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Deploy Laravel
         shell: powershell
         run: |
-          Write-Host "Deploying latest code..." -ForegroundColor Cyan
-
+          Write-Host "=== Pulling latest code ===" -ForegroundColor Cyan
           git pull origin main
+
+          Write-Host "=== Stopping old containers ===" -ForegroundColor Yellow
           docker compose down --remove-orphans
 
-          # Always fresh image – no cache ever
-          docker compose build --no-cache app
+          Write-Host "=== Checking if Docker image exists ===" -ForegroundColor Cyan
+          docker image inspect onstru_docker-app:latest >$null 2>&1
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "Image not found → building..." -ForegroundColor Magenta
+            docker compose build app
+          } else {
+            Write-Host "Image found → skipping build (fast!)" -ForegroundColor Green
+          }
 
+          Write-Host "=== Starting containers ===" -ForegroundColor Cyan
           docker compose up -d
+
+          Write-Host "=== Waiting 15 seconds for MySQL ===" -ForegroundColor Yellow
           Start-Sleep -Seconds 15
 
-          # Only optimize:clear – and make sure the job stays green
+          Write-Host "=== Clearing cache ===" -ForegroundColor Cyan
           docker compose exec -T app php artisan optimize:clear
-          if ($LASTEXITCODE -ne 0) { Write-Host "Cache clear failed (SQLite missing – normal, continuing...)" }
 
-          Write-Host "Deployed! → http://localhost:8000" -ForegroundColor Green
+          Write-Host "DEPLOY SUCCESSFUL!" -ForegroundColor Green
+          Write-Host "Site: http://localhost:8000" -ForegroundColor White
+          Write-Host "phpMyAdmin: http://localhost:8081" -ForegroundColor White
