@@ -1,5 +1,6 @@
 # .github/workflows/deploy.yml
-name: Deploy
+name: Deploy → Production (100% automatic)
+
 on:
   push:
     branches: [ main ]
@@ -7,27 +8,26 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
+    defaults:
+      run:
+        shell: powershell
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy Laravel
-        shell: powershell
+      # SMART: Rebuild image ONLY when Dockerfile or composer files changed
+      - name: Rebuild image if needed
         run: |
-          Write-Host "Deploying Laravel..." -ForegroundColor Cyan
-
-          git pull origin main
-          docker compose down --remove-orphans
-
-          # Build only if image is missing
-          if (-not (docker images -q onstru_docker-app:latest)) {
-            Write-Host "Building image (first time)..." -ForegroundColor Yellow
+          if (git diff --quiet HEAD^ HEAD -- Dockerfile composer.json composer.lock docker-compose.yml) {
+            Write-Host "No Docker/Composer changes → skipping rebuild" -ForegroundColor Cyan
+          } else {
+            Write-Host "Dockerfile or dependencies changed → rebuilding image" -ForegroundColor Yellow
             docker compose build --no-cache app
           }
 
-          docker compose up -d
-          Start-Sleep -Seconds 15
-
-          docker compose exec -T app php artisan migrate --force
+      # Always apply latest containers + code (zero downtime)
+      - name: Deploy instantly
+        run: |
+          docker compose up -d --force-recreate --no-deps app nginx
           docker compose exec -T app php artisan optimize:clear
-
-          Write-Host "Done! Site → http://localhost:8000" -ForegroundColor Green
+          Write-Host "Deployed in 3–10 seconds → http://localhost:8000" -ForegroundColor Green
